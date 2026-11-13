@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aagahi Foundation — Home</title>
+<meta name="description" content="We work with underserved communities to bring quality education, healthcare, clean water and livelihoods to families who need it most.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&family=Fraunces:wght@600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/common.css">
+<style>
+:root{--g1:#14532d;--g2:#22c55e;--sand:#fbf8ef;--ink:#1c2b21}
+body{font-family:'Nunito',sans-serif;background:var(--sand);color:var(--ink)}
+h1,h2,h3{font-family:'Fraunces',serif}
+nav{padding:1.1rem 0}nav .wrap{display:flex;justify-content:space-between;align-items:center}
+.brand{display:flex;gap:.5rem;align-items:center;font:800 1.3rem 'Fraunces';color:var(--g1)}
+nav a.m{margin-left:1.5rem;font-weight:600}nav a.m:hover{color:var(--g2)}
+.btn{display:inline-block;background:var(--g1);color:#fff;padding:.85rem 1.8rem;border-radius:99px;font-weight:800;transition:.25s}
+.btn:hover{background:var(--g2);transform:translateY(-3px)}.btn.o{background:none;color:var(--g1);border:2px solid var(--g1)}.btn.o:hover{background:var(--g1);color:#fff}
+.hero{position:relative;padding:3rem 0 9rem;overflow:hidden}
+.hero .wrap{display:grid;grid-template-columns:1.1fr 1fr;gap:3rem;align-items:center}
+.hero h1{font-size:clamp(2.4rem,5.5vw,4.4rem);line-height:1.05;margin:.6rem 0 1rem;color:var(--g1)}
+.hero p{font-size:1.15rem;max-width:48ch}
+.tag{background:#dcfce7;color:var(--g1);padding:.35rem 1rem;border-radius:99px;font-weight:800;font-size:.85rem}
+.blobwrap{position:relative;aspect-ratio:1}
+.blobimg{position:absolute;inset:0;background:linear-gradient(145deg,var(--g2),var(--g1));border-radius:62% 38% 55% 45%/48% 58% 42% 52%;animation:morph 9s ease-in-out infinite;display:grid;place-items:center;font-size:9rem;background-size:cover;background-position:center}
+.blobimg.img span{display:none}
+@keyframes morph{50%{border-radius:40% 60% 38% 62%/58% 40% 60% 42%}}
+.leaf{position:absolute;font-size:2.6rem;animation:sway 4s ease-in-out infinite}.l1{top:5%;left:-2%}.l2{bottom:8%;right:0;animation-delay:-2s}
+@keyframes sway{50%{transform:rotate(14deg) translateY(-8px)}}
+.wave{position:absolute;bottom:-1px;left:0;width:100%;height:110px}
+.strip{background:var(--g1);color:#fff;padding:0 0 4rem}
+.strip .wrap{display:grid;grid-template-columns:repeat(4,1fr);text-align:center;gap:1rem}
+.strip b{font:800 2.8rem 'Fraunces';color:#86efac;display:block}
+section{padding:5rem 0}
+h2{font-size:clamp(1.8rem,4vw,2.8rem);color:var(--g1);margin:0 0 .5rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:1.5rem;margin-top:2.5rem}
+.card{background:#fff;padding:2rem;border-radius:30px 30px 30px 6px;box-shadow:0 8px 30px #14532d14;transition:.3s;border-bottom:5px solid var(--g2)}
+.card:hover{transform:translateY(-8px) rotate(-.6deg)}
+.card i{font-style:normal;font-size:2.4rem}.card h3{margin:.6rem 0 .3rem;color:var(--g1)}.card p{margin:0;color:#4b5f52}
+.soil{background:#ecfdf3;border-radius:60px;padding:4rem 3rem;margin:0 1rem}
+.q{background:#fff;padding:1.8rem;border-radius:24px;border-left:6px solid var(--g2)}
+.q p{margin:0 0 .8rem;font-style:italic}.q small{color:#5d7064}
+.contact{display:grid;grid-template-columns:1fr 1fr;gap:3rem}
+.cform input,.cform textarea{padding:.95rem 1.2rem;border:2px solid #cdeedb;border-radius:20px;background:#fff}
+.cform input:focus,.cform textarea:focus{outline:none;border-color:var(--g2)}
+.cform button{background:var(--g1);color:#fff;border:0;border-radius:99px;padding:1rem;font-weight:800}
+footer{background:var(--g1);color:#d1fae5;text-align:center;padding:2rem 0;margin-top:3rem}
+@media(max-width:800px){.hero .wrap,.contact{grid-template-columns:1fr}.strip .wrap{grid-template-columns:1fr 1fr}nav a.m{display:none}.blobwrap{max-width:320px;margin:auto}}
+</style>
+</head>
+<body>
+<nav><div class="wrap"><a class="brand" href="#"><span class="logo-emoji">🌱</span> Aagahi Foundation</a>
+  <div><a class="m" href="#grow">Programs</a><a class="m" href="#roots">Stories</a><a class="m" href="#contact">Contact</a> <a class="btn" style="margin-left:1.2rem;padding:.6rem 1.3rem" href="#donate">Donate</a></div></div></nav>
+
+<header class="hero"><div class="wrap">
+  <div class="reveal">
+    <span class="tag">🌿 A non-profit in Delhi, India</span>
+    <h1>Every child deserves a chance to rise.</h1>
+    <p>We work with underserved communities to bring quality education, healthcare, clean water and livelihoods to families who need it most.</p>
+    <p style="margin-top:1.8rem"><a class="btn" href="#donate">Plant a seed of hope</a> <a class="btn o" href="#grow">What we do</a></p>
+  </div>
+  <div class="blobwrap reveal"><div class="blobimg" ><span>🌱</span></div>
+    <span class="leaf l1">🍃</span><span class="leaf l2">🌼</span></div>
+</div>
+<svg class="wave" viewBox="0 0 1440 110" preserveAspectRatio="none"><path fill="#14532d" d="M0 60C300 130 500 0 800 50s480 50 640-20v80H0z"/></svg>
+</header>
+
+<div class="strip"><div class="wrap">
+  <div><b data-count="12500" data-suffix="+">0</b>Lives touched</div>
+  <div><b data-count="48" data-suffix="">0</b>Villages served</div>
+  <div><b data-count="320" data-suffix="">0</b>Volunteers</div>
+  <div><b data-count="15" data-suffix="">0</b>Years of service</div>
+</div></div>
+
+<section id="grow"><div class="wrap">
+  <h2 class="reveal">Where we help things grow</h2><p>Rooted in the community, led by the community.</p>
+  <div class="grid">
+      <div class="card reveal"><i>📚</i><h3>Education</h3><p>Free learning centres, scholarships and school kits for first-generation learners.</p></div>
+      <div class="card reveal"><i>🩺</i><h3>Healthcare</h3><p>Mobile clinics, health camps and nutrition support for women and children.</p></div>
+      <div class="card reveal"><i>💧</i><h3>Clean Water</h3><p>Hand pumps, filters and sanitation so every home has safe drinking water.</p></div>
+      <div class="card reveal"><i>🧵</i><h3>Livelihood</h3><p>Skill training and micro-enterprise help that turns learning into income.</p></div>
+      <div class="card reveal"><i>👩‍🌾</i><h3>Women Empowerment</h3><p>Self-help groups, legal aid and leadership programmes run by local women.</p></div>
+      <div class="card reveal"><i>🌳</i><h3>Environment</h3><p>Tree plantation and solar lighting for climate-resilient communities.</p></div>
+    </div>
+</div></section>
+
+<section id="roots"><div class="wrap soil">
+  <h2 class="reveal">Stories from the ground</h2>
+  <div class="grid">
+      <div class="q reveal"><p>“I was the first girl in my family to hold a school bag. Now I want to be a doctor.”</p><b>Meena, 14</b><br><small>Scholar, Class 9</small></div>
+      <div class="q reveal"><p>“The training gave me a machine and the confidence to start my own shop.”</p><b>Ramesh Kumar</b><br><small>Tailor &amp; trainer</small></div>
+      <div class="q reveal"><p>“Today our village women decide how our money is used. That is real change.”</p><b>Sunita Devi</b><br><small>Self-help group lead</small></div>
+    </div>
+</div></section>
+
+<section id="contact"><div class="wrap contact">
+  <div><h2>Come grow with us</h2><p>Volunteer, sponsor a child, or bring your skills.</p><p>📧 hello@example.org<br>📞 +91 98765 43210<br>📍 Delhi, India</p></div>
+  <form class="cform" method="post" action="#contact" onsubmit="alert('Demo preview only. The contact form works on the PHP version.');return false;" id="contact"><input type="hidden" name="back" value="/06-nature-green/index.html"><input type="text" name="website" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" aria-hidden="true"><input type="text" name="name" placeholder="Your name" required><input type="email" name="email" placeholder="Your email" required><textarea name="message" rows="4" placeholder="How would you like to help?" required></textarea><button type="submit">Send message</button></form></div></section>
+<footer>© 2026 Aagahi Foundation · Non-profit organisation • Delhi, India</footer>
+<script src="assets/common.js"></script>
+</body>
+</html>
