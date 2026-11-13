@@ -1,0 +1,386 @@
+{
+ "areas": [
+  {
+   "id": "skills",
+   "title": "Skill Development & Women Empowerment",
+   "intro": "Hands-on training that builds livelihoods and safer workplaces for women.",
+   "programs": [
+    {
+     "slug": "hunar-ki-dor",
+     "title": "Hunar Ki Dor",
+     "text": "Craft and tailoring workshops where women learn marketable skills and turn everyday materials into products.",
+     "images": [
+      {
+       "n": "01",
+       "w": 359,
+       "h": 480,
+       "alt": "Bags and craft items made by participants"
+      },
+      {
+       "n": "02",
+       "w": 480,
+       "h": 270,
+       "alt": "Hand-crafted blouses made by participants"
+      },
+      {
+       "n": "03",
+       "w": 480,
+       "h": 270,
+       "alt": "Hunar Ki Dor – Aagahi Foundation"
+      },
+      {
+       "n": "04",
+       "w": 480,
+       "h": 270,
+       "alt": "Hand-crafted blouses made by participants"
+      },
+      {
+       "n": "05",
+       "w": 360,
+       "h": 480,
+       "alt": "Hunar Ki Dor – Aagahi Foundation"
+      },
+      {
+       "n": "06",
+       "w": 480,
+       "h": 478,
+       "alt": "Hunar Ki Dor – Aagahi Foundation"
+      },
+      {
+       "n": "07",
+       "w": 480,
+       "h": 476,
+       "alt": "Hunar Ki Dor – Aagahi Foundation"
+      },
+      {
+       "n": "08",
+       "w": 480,
+       "h": 479,
+       "alt": "Hunar Ki Dor – Aagahi Foundation"
+      }
+     ]
+    },
+    {
+     "slug": "posh",
+     "title": "POSH Training",
+     "text": "Training sessions on the Prevention of Sexual Harassment at the workplace for professionals and teams.",
+     "images": [
+      {
+       "n": "01",
+       "w": 270,
+       "h": 480,
+       "alt": "POSH Training – Aagahi Foundation"
+      },
+      {
+       "n": "03",
+       "w": 270,
+       "h": 480,
+       "alt": "POSH Training – Aagahi Foundation"
+      },
+      {
+       "n": "08",
+       "w": 270,
+       "h": 480,
+       "alt": "POSH Training – Aagahi Foundation"
+      },
+      {
+       "n": "09",
+       "w": 270,
+       "h": 480,
+       "alt": "POSH Training – Aagahi Foundation"
+      },
+      {
+       "n": "14",
+       "w": 270,
+       "h": 480,
+       "alt": "POSH Training – Aagahi Foundation"
+      },
+      {
+       "n": "16",
+       "w": 270,
+       "h": 480,
+       "alt": "POSH Training – Aagahi Foundation"
+      },
+      {
+       "n": "22",
+       "w": 480,
+       "h": 270,
+       "alt": "POSH Training – Aagahi Foundation"
+      },
+      {
+       "n": "24",
+       "w": 480,
+       "h": 320,
+       "alt": "POSH Training – Aagahi Foundation"
+      },
+      {
+       "n": "25",
+       "w": 480,
+       "h": 320,
+       "alt": "POSH Training – Aagahi Foundation"
+      },
+      {
+       "n": "27",
+       "w": 480,
+       "h": 320,
+       "alt": "POSH Training – Aagahi Foundation"
+      },
+      {
+       "n": "31",
+       "w": 480,
+       "h": 320,
+       "alt": "POSH Training – Aagahi Foundation"
+      },
+      {
+       "n": "34",
+       "w": 320,
+       "h": 480,
+       "alt": "POSH Training – Aagahi Foundation"
+      },
+      {
+       "n": "36",
+       "w": 480,
+       "h": 320,
+       "alt": "POSH Training – Aagahi Foundation"
+      },
+      {
+       "n": "37",
+       "w": 480,
+       "h": 320,
+       "alt": "POSH Training – Aagahi Foundation"
+      },
+      {
+       "n": "47",
+       "w": 480,
+       "h": 320,
+       "alt": "POSH Training – Aagahi Foundation"
+      },
+      {
+       "n": "56",
+       "w": 480,
+       "h": 320,
+       "alt": "POSH Training – Aagahi Foundation"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "health",
+   "title": "Healthy Hygiene & Wellbeing",
+   "intro": "Taking health, hygiene and safety awareness to the people who need it, where they live and work.",
+   "programs": [
+    {
+     "slug": "health-camp",
+     "title": "Health Camp",
+     "text": "Health check-up camps that bring screening and care closer to the community.",
+     "images": [
+      {
+       "n": "01",
+       "w": 480,
+       "h": 265,
+       "alt": "Health Camp – Aagahi Foundation"
+      },
+      {
+       "n": "02",
+       "w": 480,
+       "h": 264,
+       "alt": "Health Camp – Aagahi Foundation"
+      },
+      {
+       "n": "03",
+       "w": 480,
+       "h": 360,
+       "alt": "Health Camp – Aagahi Foundation"
+      }
+     ]
+    },
+    {
+     "slug": "kids-hygiene",
+     "title": "Kids Hygiene",
+     "text": "Hygiene awareness sessions and kits for school children.",
+     "images": [
+      {
+       "n": "01",
+       "w": 480,
+       "h": 270,
+       "alt": "Kids Hygiene – Aagahi Foundation"
+      },
+      {
+       "n": "02",
+       "w": 480,
+       "h": 270,
+       "alt": "Kids Hygiene – Aagahi Foundation"
+      },
+      {
+       "n": "03",
+       "w": 480,
+       "h": 320,
+       "alt": "Kids Hygiene – Aagahi Foundation"
+      },
+      {
+       "n": "04",
+       "w": 480,
+       "h": 320,
+       "alt": "Kids Hygiene – Aagahi Foundation"
+      },
+      {
+       "n": "05",
+       "w": 480,
+       "h": 320,
+       "alt": "Kids Hygiene – Aagahi Foundation"
+      }
+     ]
+    },
+    {
+     "slug": "menstrual-hygiene",
+     "title": "Menstrual Hygiene",
+     "text": "Open conversations on menstrual health with women and girls in the community.",
+     "images": [
+      {
+       "n": "01",
+       "w": 480,
+       "h": 319,
+       "alt": "Menstrual Hygiene – Aagahi Foundation"
+      },
+      {
+       "n": "02",
+       "w": 444,
+       "h": 362,
+       "alt": "Menstrual Hygiene – Aagahi Foundation"
+      },
+      {
+       "n": "03",
+       "w": 461,
+       "h": 480,
+       "alt": "Menstrual Hygiene – Aagahi Foundation"
+      }
+     ]
+    },
+    {
+     "slug": "road-safety",
+     "title": "Road Safety",
+     "text": "Street-play road-safety drives in Delhi markets, held with traffic police and covered by the press.",
+     "images": [
+      {
+       "n": "01",
+       "w": 480,
+       "h": 320,
+       "alt": "Road Safety – Aagahi Foundation"
+      },
+      {
+       "n": "02",
+       "w": 480,
+       "h": 360,
+       "alt": "Road Safety – Aagahi Foundation"
+      },
+      {
+       "n": "03",
+       "w": 480,
+       "h": 360,
+       "alt": "Road Safety – Aagahi Foundation"
+      },
+      {
+       "n": "04",
+       "w": 480,
+       "h": 320,
+       "alt": "Road Safety – Aagahi Foundation"
+      },
+      {
+       "n": "05",
+       "w": 480,
+       "h": 320,
+       "alt": "Road Safety – Aagahi Foundation"
+      },
+      {
+       "n": "06",
+       "w": 480,
+       "h": 320,
+       "alt": "Road Safety – Aagahi Foundation"
+      },
+      {
+       "n": "07",
+       "w": 480,
+       "h": 320,
+       "alt": "Road Safety – Aagahi Foundation"
+      },
+      {
+       "n": "08",
+       "w": 480,
+       "h": 320,
+       "alt": "Road Safety – Aagahi Foundation"
+      },
+      {
+       "n": "09",
+       "w": 339,
+       "h": 480,
+       "alt": "Newspaper coverage of the road-safety drive"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "finance",
+   "title": "Financial Literacy & Cyber Security",
+   "intro": "Helping people manage money wisely and stay safe online.",
+   "programs": [
+    {
+     "slug": "financial-literacy-cyber-security",
+     "title": "Financial Literacy & Cyber Security",
+     "text": "Awareness sessions for community members and police personnel on safe money habits and online security.",
+     "images": [
+      {
+       "n": "01",
+       "w": 480,
+       "h": 320,
+       "alt": "Financial Literacy & Cyber Security – Aagahi Foundation"
+      },
+      {
+       "n": "04",
+       "w": 480,
+       "h": 320,
+       "alt": "Financial Literacy & Cyber Security – Aagahi Foundation"
+      },
+      {
+       "n": "05",
+       "w": 480,
+       "h": 408,
+       "alt": "Financial Literacy & Cyber Security – Aagahi Foundation"
+      },
+      {
+       "n": "06",
+       "w": 480,
+       "h": 399,
+       "alt": "Financial Literacy & Cyber Security – Aagahi Foundation"
+      },
+      {
+       "n": "07",
+       "w": 480,
+       "h": 320,
+       "alt": "Financial Literacy & Cyber Security – Aagahi Foundation"
+      },
+      {
+       "n": "08",
+       "w": 480,
+       "h": 320,
+       "alt": "Financial Literacy & Cyber Security – Aagahi Foundation"
+      },
+      {
+       "n": "09",
+       "w": 480,
+       "h": 320,
+       "alt": "Financial Literacy & Cyber Security – Aagahi Foundation"
+      },
+      {
+       "n": "10",
+       "w": 480,
+       "h": 320,
+       "alt": "Financial Literacy & Cyber Security – Aagahi Foundation"
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}
