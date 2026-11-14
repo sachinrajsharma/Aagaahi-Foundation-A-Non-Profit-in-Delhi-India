@@ -126,3 +126,8 @@ footer{background:var(--g1);color:#d1fae5;text-align:center;padding:2rem 0;margi
 .captcha-img svg{display:block}
 .captcha-refresh{flex:0 0 auto;width:44px;height:44px;font-size:1.2rem;border:1.5px solid #d1d5db;border-radius:12px;background:var(--sand);color:var(--g1);cursor:pointer}
 .captcha-refresh:hover,.captcha-refresh:focus{border-color:var(--g2);background:#dcfce7;outline:none}
+
+/* ---- nav: Log in / Create account stay visible on phones ---- */
+[hidden]{display:none!important}
+.navauth{display:inline-flex;align-items:center;margin-left:.8rem}
+@media(max-width:800px){nav .wrap{flex-wrap:wrap;gap:.4rem .8rem;justify-content:center}nav .wrap>div:last-child{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:.3rem .9rem}nav a.m{display:inline-block;margin-left:0;font-size:.92rem}.navauth{margin-left:0}.powered-row{justify-content:center;margin-top:0}}

@@ -8,7 +8,8 @@
 <body>
 <?php $areas = events_data(); $nProg = 0; $nPics = 0; foreach ($areas as $a) { $nProg += count($a["programs"]); foreach ($a["programs"] as $p) $nPics += count($p["images"]); } ?>
 <nav><div class="wrap"><a class="brand" href="#"><?= logo() ?> <?= e($ngo["name"]) ?></a>
-  <div><a class="m" href="#work">Our Work</a><a class="m" href="study/">Study</a><?php if (blog_enabled()) : ?><a class="m" href="<?= e($ngo["blog"]["blog_url"]) ?>">Blog</a><?php endif; ?><a class="m" href="#contact">Contact</a> <a class="btn" style="margin-left:1.2rem;padding:.6rem 1.3rem" href="<?= e($ngo["donate_url"]) ?>">Support us</a></div></div></nav>
+  <?php $blogHref = blog_enabled() ? $ngo["blog"]["blog_url"] : "blog/"; ?>
+  <div><a class="m" href="#work">Our Work</a><a class="m" href="study/">Study</a><a class="m" href="<?= e($blogHref) ?>">Blog</a><a class="m" href="#contact">Contact</a> <span class="navauth"><a class="m auth" data-auth="in" href="study/#/login">Log in</a><a class="btn" data-auth="in" style="margin-left:1rem;padding:.6rem 1.3rem" href="study/#/join">Create account</a><a class="btn" data-auth="out" hidden style="margin-left:1rem;padding:.6rem 1.3rem" href="study/#/me">My progress</a></span></div></div></nav>
 <div class="wrap powered-row"><div class="powered">Powered by <a href="https://vidaara.org" target="_blank" rel="noopener">vidaara.org</a></div></div>
 
 <header class="hero"><div class="wrap">
@@ -45,6 +46,7 @@
 </div></section>
 <footer>© <?= date("Y") ?> <?= e($ngo["name"]) ?> · <?= e($ngo["reg_note"]) ?></footer>
 <script src="assets/common.js"></script>
+<script src="assets/nav.js"></script>
 <script src="assets/gallery.js"></script>
 <?= blog_tracker("home") ?>
 </body>

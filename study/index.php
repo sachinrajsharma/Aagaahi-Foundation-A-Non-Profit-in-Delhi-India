@@ -11,7 +11,7 @@ require_once __DIR__ . '/../includes/study.php';
 </head>
 <body>
 <nav><div class="wrap"><a class="brand" href="../"><?= logo() ?> <?= e($ngo['name']) ?></a>
-  <div><a class="m" href="../#work">Our Work</a><a class="m" href="./">Study</a><a class="m" href="../#contact">Contact</a></div></div></nav>
+  <div><a class="m" href="../#work">Our Work</a><a class="m" href="./">Study</a><a class="m" href="../blog/">Blog</a><a class="m" href="../#contact">Contact</a> <span class="navauth"><a class="m auth" data-auth="in" href="./#/login">Log in</a><a class="btn" data-auth="in" style="margin-left:1rem;padding:.6rem 1.3rem" href="./#/join">Create account</a><a class="btn" data-auth="out" hidden style="margin-left:1rem;padding:.6rem 1.3rem" href="./#/me">My progress</a></span></div></div></nav>
 <div class="wrap powered-row"><div class="powered">Powered by <a href="https://vidaara.org" target="_blank" rel="noopener">vidaara.org</a></div></div>
 <main class="wrap study-hero"><span class="tag">🎓 Free for every student</span><h1>Study with Aagahi</h1>
   <p class="st-sub">Lessons, worked examples and practice tests for Class 1 to 12: Maths, Science, Physics, Chemistry, Biology, English and more. Study freely, or create a free account to save your progress.</p>
@@ -20,6 +20,7 @@ require_once __DIR__ . '/../includes/study.php';
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
 <script defer src="../assets/study.js"></script>
+<script src="../assets/nav.js"></script>
 <?= blog_tracker('study') ?>
 </body>
 </html>

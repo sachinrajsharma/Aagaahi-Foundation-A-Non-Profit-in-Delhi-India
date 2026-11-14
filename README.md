@@ -55,3 +55,6 @@ Anyone can **create a free account** on the Study page (name, email, password, c
 - Students can delete their account from **My progress** (email code, then admin approval).
 - Studying without an account still works; progress then stays in the browser only.
 - To onboard another NGO, only the API base and (optionally) a class code are needed; there is nothing NGO-specific in the code.
+
+### Navigation and Blog
+Every page has **Our Work · Study · Blog · Contact · Log in · Create account** (it turns into **My progress** once a student is signed in; on phones the links wrap under the logo). The **Blog** page lists the posts in `includes/posts.json` (empty until you add the first one; see the `_help` line in that file, then run `node tools/build-static.js`). If the BlogForge engine is hosted and `blog.engine_url` is set in `includes/config.php`, the Blog link points to the engine instead and the homepage shows "Latest from our blog".

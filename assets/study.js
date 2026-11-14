@@ -294,7 +294,6 @@
       ff('password', 'Password', 'password', 'minlength="8" placeholder="Min. 8 characters" autocomplete="new-password"') +
       '<div class="form-group"><label class="form-label" for="grade">Your class</label><select class="form-input" id="grade" name="grade" required><option value="">Choose your class…</option>' +
       [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(function (n) { return '<option value="' + n + '">Class ' + n + '</option>'; }).join('') + '</select></div>' +
-      (PARTNER_CODE ? '' : '<div class="form-group"><label class="form-label" for="code">Class code <span style="font-weight:400;color:#64748b">(optional)</span></label><input class="form-input" id="code" name="code" maxlength="12" placeholder="Only if your coordinator gave you one" autocomplete="off" autocapitalize="characters"></div>') +
       '<input type="text" name="website" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" aria-hidden="true">' + captchaRow() +
       '<p class="auth-fine">We save only your name, email, class and learning progress. No ads, nothing sold. You can delete your account any time from <i>My progress</i>.</p>' +
       '<button class="btn-auth" type="submit">Create Free Account →</button></form>' +
@@ -303,7 +302,7 @@
     document.getElementById('jf').addEventListener('submit', function (e) {
       e.preventDefault();
       var f = e.target, m = document.getElementById('amsg'); err(m, '');
-      var code = PARTNER_CODE || (f.code ? f.code.value : '');
+      var code = PARTNER_CODE; // the NGO's own class code from the site config (students never see or type it)
       papi('POST', '/register', { name: f.name.value, email: f.email.value, password: f.password.value, grade: f.grade.value, code: code, website: f.website.value, captcha_id: captchaId, captcha: f.captcha.value }).then(function (r) {
         if (!r.ok) { err(m, r.error || 'Could not create the account.'); f.captcha.value = ''; loadCaptcha(); return; }
         setSession(r.data.token, r.data.user); location.hash = '#/me';

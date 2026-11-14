@@ -53,3 +53,13 @@ function blog_latest_html(): string
     }
     return $o . '</div><p style="margin-top:1.5rem"><a class="btn o" href="/blog">All posts</a></p></div></section>';
 }
+
+/** Posts kept in includes/posts.json (used when the BlogForge engine is not connected). Newest first. */
+function local_posts(): array
+{
+    $f = __DIR__ . '/posts.json';
+    $d = is_file($f) ? json_decode(file_get_contents($f), true) : null;
+    $posts = is_array($d) && isset($d['posts']) && is_array($d['posts']) ? $d['posts'] : [];
+    usort($posts, function ($a, $b) { return strcmp($b['date'] ?? '', $a['date'] ?? ''); });
+    return $posts;
+}

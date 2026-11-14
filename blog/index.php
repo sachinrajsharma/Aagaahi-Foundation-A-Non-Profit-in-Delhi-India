@@ -17,7 +17,13 @@ if (blog_enabled()) {
         http_response_code(404);
     }
 } else {
-    http_response_code(404);
+    // BlogForge engine not connected: show the posts kept in includes/posts.json
+    $local = local_posts();
+    if ($slug === '') $posts = $local;
+    else {
+        foreach ($local as $lp) if ($lp['slug'] === $slug) $post = ['title' => $lp['title'], 'content' => $lp['content'] ?? '', 'meta' => ['title' => $lp['title'], 'description' => $lp['excerpt'] ?? '', 'canonical' => ''], 'json_ld' => ''];
+        if (!$post) http_response_code(404);
+    }
 }
 $title = $post['meta']['title'] ?? $post['title'] ?? 'Blog';
 ?><!DOCTYPE html>
@@ -34,7 +40,7 @@ $title = $post['meta']['title'] ?? $post['title'] ?? 'Blog';
 </head>
 <body>
 <nav><div class="wrap"><a class="brand" href="/"><?= logo() ?> <?= e($ngo['name']) ?></a>
-  <div><a class="m" href="/#work">Our Work</a><a class="m" href="/study/">Study</a><a class="m" href="/blog">Blog</a><a class="m" href="/#contact">Contact</a></div></div></nav>
+  <div><a class="m" href="/#work">Our Work</a><a class="m" href="/study/">Study</a><a class="m" href="/blog">Blog</a><a class="m" href="/#contact">Contact</a> <span class="navauth"><a class="m auth" data-auth="in" href="/study/#/login">Log in</a><a class="btn" data-auth="in" style="margin-left:1rem;padding:.6rem 1.3rem" href="/study/#/join">Create account</a><a class="btn" data-auth="out" hidden style="margin-left:1rem;padding:.6rem 1.3rem" href="/study/#/me">My progress</a></span></div></div></nav>
 <div class="wrap powered-row"><div class="powered">Powered by <a href="https://vidaara.org" target="_blank" rel="noopener">vidaara.org</a></div></div>
 <section><div class="wrap" style="max-width:820px">
 <?php if ($post): ?>
@@ -43,10 +49,11 @@ $title = $post['meta']['title'] ?? $post['title'] ?? 'Blog';
   <h1 style="color:var(--g1)">Blog</h1>
   <div class="grid"><?php foreach ($posts as $p): ?><a class="card" href="/blog/<?= e($p['slug']) ?>"><h3><?= e($p['title']) ?></h3><p><?= e($p['excerpt'] ?? '') ?></p></a><?php endforeach; ?></div>
 <?php else: ?>
-  <h1 style="color:var(--g1)">Blog</h1><p><?= blog_enabled() ? 'Nothing here yet.' : 'The blog is not connected yet.' ?></p>
+  <h1 style="color:var(--g1)">Blog</h1><p>Stories and updates from <?= e($ngo['name']) ?> will appear here soon.</p>
 <?php endif; ?>
 </div></section>
 <footer>© <?= date('Y') ?> <?= e($ngo['name']) ?></footer>
+<script src="assets/nav.js"></script>
 <?= blog_tracker($post ? 'blog' : 'blog_index', $slug) ?>
 </body>
 </html>

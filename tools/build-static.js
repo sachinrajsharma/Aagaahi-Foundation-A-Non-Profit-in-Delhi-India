@@ -43,7 +43,7 @@ const html = `<!DOCTYPE html>
 </head>
 <body>
 <nav><div class="wrap"><a class="brand" href="#"><span class="logo-emoji">${esc(ngo.logo)}</span> ${esc(ngo.name)}</a>
-  <div><a class="m" href="#work">Our Work</a><a class="m" href="study/">Study</a>${engineUrl ? `<a class="m" href="${esc(blogPath)}">Blog</a>` : ''}<a class="m" href="#contact">Contact</a> <a class="btn" style="margin-left:1.2rem;padding:.6rem 1.3rem" href="${esc(ngo.donate_url)}">Support us</a></div></div></nav>
+  <div><a class="m" href="#work">Our Work</a><a class="m" href="study/">Study</a><a class="m" href="${engineUrl ? esc(blogPath) : 'blog/'}">Blog</a><a class="m" href="#contact">Contact</a> <span class="navauth"><a class="m auth" data-auth="in" href="study/#/login">Log in</a><a class="btn" data-auth="in" style="margin-left:1rem;padding:.6rem 1.3rem" href="study/#/join">Create account</a><a class="btn" data-auth="out" hidden style="margin-left:1rem;padding:.6rem 1.3rem" href="study/#/me">My progress</a></span></div></div></nav>
 <div class="wrap powered-row"><div class="powered">Powered by <a href="https://vidaara.org" target="_blank" rel="noopener">vidaara.org</a></div></div>
 
 <header class="hero"><div class="wrap">
@@ -83,6 +83,7 @@ ${events}
 <footer>© ${new Date().getFullYear()} ${esc(ngo.name)} · ${esc(ngo.reg_note)}</footer>
 <script src="assets/common.js"></script>
 <script src="assets/gallery.js"></script>
+<script src="assets/nav.js"></script>
 ${engineUrl && siteSlug ? `<script src="${esc(engineUrl)}/js/track.js" data-site="${esc(siteSlug)}" data-engine="${esc(engineUrl)}" data-page-type="home" defer></script>` : ''}
 </body>
 </html>
@@ -111,7 +112,7 @@ const studyHtml = `<!DOCTYPE html>
 </head>
 <body>
 <nav><div class="wrap"><a class="brand" href="../"><span class="logo-emoji">${esc(ngo.logo)}</span> ${esc(ngo.name)}</a>
-  <div><a class="m" href="../#work">Our Work</a><a class="m" href="./">Study</a><a class="m" href="../#contact">Contact</a></div></div></nav>
+  <div><a class="m" href="../#work">Our Work</a><a class="m" href="./">Study</a><a class="m" href="../blog/">Blog</a><a class="m" href="../#contact">Contact</a> <span class="navauth"><a class="m auth" data-auth="in" href="./#/login">Log in</a><a class="btn" data-auth="in" style="margin-left:1rem;padding:.6rem 1.3rem" href="./#/join">Create account</a><a class="btn" data-auth="out" hidden style="margin-left:1rem;padding:.6rem 1.3rem" href="./#/me">My progress</a></span></div></div></nav>
 <div class="wrap powered-row"><div class="powered">Powered by <a href="https://vidaara.org" target="_blank" rel="noopener">vidaara.org</a></div></div>
 <main class="wrap study-hero"><span class="tag">🎓 Free for every student</span><h1>Study with Aagahi</h1>
   <p class="st-sub">Lessons, worked examples and practice tests for Class 1 to 12: Maths, Science, Physics, Chemistry, Biology, English and more. Study freely, or create a free account to save your progress.</p>
@@ -120,9 +121,50 @@ const studyHtml = `<!DOCTYPE html>
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
 <script defer src="../assets/study.js"></script>
+<script src="../assets/nav.js"></script>
 </body>
 </html>
 `;
+
+// ---- Blog pages (docs/blog/): posts from includes/posts.json, newest first. Empty state until the first post is added.
+const postsFile = root + '/includes/posts.json';
+const posts = (fs.existsSync(postsFile) ? (JSON.parse(fs.readFileSync(postsFile, 'utf8')).posts || []) : [])
+  .filter(p => p && p.title && /^[a-z0-9-]+$/i.test(p.slug || '')).sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')));
+function blogShell(title, pre, body, desc) {
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>${esc(title)} — ${esc(ngo.name)}</title>
+<meta name="description" content="${esc(desc || ngo.mission)}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&family=Fraunces:wght@600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="${pre}assets/common.css">
+<link rel="stylesheet" href="${pre}assets/site.css">
+</head>
+<body>
+<nav><div class="wrap"><a class="brand" href="${pre}"><span class="logo-emoji">${esc(ngo.logo)}</span> ${esc(ngo.name)}</a>
+  <div><a class="m" href="${pre}#work">Our Work</a><a class="m" href="${pre}study/">Study</a><a class="m" href="${pre}blog/">Blog</a><a class="m" href="${pre}#contact">Contact</a> <span class="navauth"><a class="m auth" data-auth="in" href="${pre}study/#/login">Log in</a><a class="btn" data-auth="in" style="margin-left:1rem;padding:.6rem 1.3rem" href="${pre}study/#/join">Create account</a><a class="btn" data-auth="out" hidden style="margin-left:1rem;padding:.6rem 1.3rem" href="${pre}study/#/me">My progress</a></span></div></div></nav>
+<div class="wrap powered-row"><div class="powered">Powered by <a href="https://vidaara.org" target="_blank" rel="noopener">vidaara.org</a></div></div>
+<section><div class="wrap" style="max-width:820px">${body}</div></section>
+<footer>© ${new Date().getFullYear()} ${esc(ngo.name)} · ${esc(ngo.reg_note)}</footer>
+<script src="${pre}assets/nav.js"></script>
+</body>
+</html>
+`;
+}
+const listBody = posts.length
+  ? '<h1 style="color:var(--g1)">Blog</h1><div class="grid">' + posts.map(p => `<a class="card" href="${esc(p.slug)}/"><h3>${esc(p.title)}</h3><p>${esc(p.excerpt || '')}</p><small>${esc(p.date || '')}</small></a>`).join('') + '</div>'
+  : `<h1 style="color:var(--g1)">Blog</h1><p class="st-sub">Stories and updates from ${esc(ngo.name)} will appear here soon.</p>`;
+fs.mkdirSync(docs + '/blog', { recursive: true });
+fs.writeFileSync(docs + '/blog/index.html', blogShell('Blog', '../', listBody));
+posts.forEach(p => {
+  fs.mkdirSync(docs + '/blog/' + p.slug, { recursive: true });
+  fs.writeFileSync(docs + '/blog/' + p.slug + '/index.html', blogShell(p.title, '../../', `<article><h1 style="font-size:2.2rem;color:var(--g1)">${esc(p.title)}</h1><p class="st-sub">${esc(p.date || '')}</p>${p.content || ''}</article>`, p.excerpt));
+});
+
 fs.mkdirSync(docs + '/study', { recursive: true });
 fs.writeFileSync(docs + '/study/index.html', studyHtml);
 console.log('docs/index.html built:', areas.length, 'areas,', nProg, 'programmes,', nPics, 'photos');
