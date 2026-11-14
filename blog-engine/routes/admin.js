@@ -13,22 +13,34 @@ const insights = require('../lib/insights');
 const seo = require('../lib/seo');
 const ai = require('../lib/ai');
 const webhooks = require('../lib/webhooks');
-const { sha256, slugify, rand } = require('../lib/util');
+const { slugify, rand } = require('../lib/util');
+const auth = require('../lib/auth');
+const adminUsers = require('./admin-users');
+const adminGallery = require('./admin-gallery');
 
 const router = express.Router();
 
 // ── Auth ────────────────────────────────────────────────────────────────────
-function requireAdmin(req, res, next) {
-  if (req.session && req.session.admin) return next();
-  return res.redirect('/admin/login');
+// Signed-in staff are re-checked against the database on every request, so a deactivated or demoted account
+// loses access immediately instead of when its session cookie expires.
+async function requireAdmin(req, res, next) {
+  if (!(req.session && req.session.admin)) return res.redirect('/admin/login');
+  try {
+    const [[a]] = await pool.query('SELECT id, name, email, role, is_active FROM admins WHERE id = ?', [req.session.admin.id]);
+    if (!a || !a.is_active) return req.session.destroy(() => res.redirect('/admin/login'));
+    req.session.admin = { id: a.id, name: a.name, email: a.email, role: a.role };
+    next();
+  } catch (e) { next(e); }
 }
 router.get('/login', (req, res) => res.render('admin/login', { layout: 'layout', title: 'Sign in', error: null }));
 router.post('/login', rateLimit({ windowMs: 15 * 60 * 1000, max: 20 }), async (req, res) => {
   const email = (req.body.email || '').trim().toLowerCase();
   const [[a]] = await pool.query('SELECT * FROM admins WHERE email=? AND is_active=1', [email]);
-  if (!a || a.password_hash !== sha256(req.body.password || '')) {
+  const check = a ? await auth.verifyPassword(req.body.password || '', a.password_hash) : { ok: false };
+  if (!a || !check.ok) {
     return res.status(401).render('admin/login', { layout: 'layout', title: 'Sign in', error: 'Invalid email or password.' });
   }
+  if (check.upgrade) await pool.query('UPDATE admins SET password_hash = ? WHERE id = ?', [await auth.hashPassword(req.body.password), a.id]); // old SHA-256 -> bcrypt
   req.session.admin = { id: a.id, name: a.name, email: a.email, role: a.role };
   req.session.save(() => res.redirect('/admin'));
 });
@@ -38,7 +50,7 @@ router.use(requireAdmin);
 
 // Active-site context (an admin can manage several sites).
 router.use(async (req, res, next) => {
-  const sites = await postsLib.allSites();
+  const sites = await auth.sitesFor(req.session.admin);
   if (!sites.length) { res.locals.sites = []; res.locals.activeSite = null; return next(); }
   let active = sites.find((s) => s.id === (req.session.siteId || 0)) || sites[0];
   req.session.siteId = active.id;
@@ -50,9 +62,24 @@ router.use(async (req, res, next) => {
 });
 router.post('/switch-site', (req, res) => { req.session.siteId = parseInt(req.body.site_id) || null; res.redirect(req.get('Referer') || '/admin'); });
 
+// Who may open what (role -> permission, see lib/auth.js). Staff only ever see the sites they were given.
+router.use('/posts', auth.requirePerm('posts'));
+router.use('/categories', auth.requirePerm('posts'));
+router.use('/ai', auth.requirePerm('posts'));
+router.use('/media', auth.requirePerm('media'));
+router.use('/insights', auth.requirePerm('insights'));
+router.use('/sites', auth.requirePerm('sites'));
+router.use('/users', auth.requirePerm('users'));
+router.use('/gallery', auth.requirePerm('gallery'), (req, res, next) => (req.activeSite ? next() : res.redirect('/admin')));
+router.use(adminUsers);
+router.use(adminGallery);
+
 // ── Dashboard ────────────────────────────────────────────────────────────────
 router.get('/', async (req, res) => {
-  if (!req.activeSite) return res.redirect('/admin/sites');
+  if (!req.activeSite) {
+    if (auth.can(req.session.admin.role, 'sites')) return res.redirect('/admin/sites');
+    return res.render('error', { layout: 'layout', title: 'No site yet', message: 'Your account has not been given access to a website yet. Please ask an administrator.' });
+  }
   const sid = req.activeSite.id;
   const [[counts]] = await pool.query(
     "SELECT COUNT(*) total, SUM(status='published') published, SUM(status='draft') draft, SUM(status='scheduled') scheduled FROM posts WHERE site_id=?", [sid]);
@@ -179,7 +206,20 @@ router.post('/categories', async (req, res) => {
     await pool.query('INSERT IGNORE INTO categories (site_id, name, slug, sort_order) VALUES (?,?,?,?)',
       [req.activeSite.id, name, slugify(name), parseInt(req.body.sort_order) || 0]);
   }
-  res.redirect('/admin/sites');
+  res.redirect('/admin/posts');
+});
+
+// ── My account (every role): change own password ─────────────────────────────
+router.get('/account', (req, res) => res.render('admin/account', { layout: 'layout', title: 'My account', me: req.session.admin, message: '', ok: false }));
+router.post('/account/password', rateLimit({ windowMs: 15 * 60 * 1000, max: 10 }), async (req, res) => {
+  const me = req.session.admin, b = req.body || {};
+  const show = (message, ok) => res.render('admin/account', { layout: 'layout', title: 'My account', me, message, ok });
+  const [[row]] = await pool.query('SELECT password_hash FROM admins WHERE id = ?', [me.id]);
+  if (!row || !(await auth.verifyPassword(b.current || '', row.password_hash)).ok) return show('Your current password is not right.', false);
+  if (String(b.next || '').length < 10) return show('The new password must be at least 10 characters.', false);
+  if (b.next !== b.again) return show('The two new passwords do not match.', false);
+  await pool.query('UPDATE admins SET password_hash = ? WHERE id = ?', [await auth.hashPassword(b.next), me.id]);
+  show('Password changed.', true);
 });
 
 module.exports = router;

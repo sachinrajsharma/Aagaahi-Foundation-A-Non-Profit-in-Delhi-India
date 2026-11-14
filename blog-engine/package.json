@@ -23,10 +23,12 @@
     "helmet": "^7.1.0",
     "morgan": "^1.10.0",
     "multer": "^2.3.0",
-    "mysql2": "^3.11.0"
+    "mysql2": "^3.11.0",
+    "bcryptjs": "^2.4.3"
   },
   "optionalDependencies": {
-    "geoip-country": "^4.1.0"
+    "geoip-country": "^4.1.0",
+    "sharp": "^0.33.5"
   },
   "license": "UNLICENSED",
   "private": true

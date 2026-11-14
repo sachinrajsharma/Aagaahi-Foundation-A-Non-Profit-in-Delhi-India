@@ -58,3 +58,6 @@ Anyone can **create a free account** on the Study page (name, email, password, c
 
 ### Navigation and Blog
 Every page has **Our Work · Study · Blog · Contact · Log in · Create account** (it turns into **My progress** once a student is signed in; on phones the links wrap under the logo). The **Blog** page lists the posts in `includes/posts.json` (empty until you add the first one; see the `_help` line in that file, then run `node tools/build-static.js`). If the BlogForge engine is hosted and `blog.engine_url` is set in `includes/config.php`, the Blog link points to the engine instead and the homepage shows "Latest from our blog".
+
+### Admin dashboard (staff, blog, gallery, images)
+`blog-engine/` is a WordPress-style dashboard: staff accounts with roles and per-site access, a blog editor, a gallery manager (events and photos, auto-resized) and an image library. It needs a Node + MySQL host (it cannot run on GitHub Pages); see `blog-engine/CMS-GUIDE.md` for setup. When `cms.url` in `includes/config.php` is set, the Blog and the "Our work" gallery show what the team publishes there.

@@ -55,10 +55,26 @@ app.use(session({
   store: sessionStore,
   resave: false,
   saveUninitialized: false,
-  cookie: { httpOnly: true, secure: cfg.env === 'production', maxAge: 7 * 24 * 60 * 60 * 1000 },
+  cookie: { httpOnly: true, sameSite: 'lax', secure: cfg.env === 'production', maxAge: 7 * 24 * 60 * 60 * 1000 },
 }));
 
+// CSRF defence (besides sameSite=lax): refuse state-changing requests that come from a different website.
+// Server-to-server API calls and the public view beacon send no browser Origin/Referer, or are on /api, and pass.
 app.use((req, res, next) => {
+  if (req.method === 'GET' || req.method === 'HEAD' || req.method === 'OPTIONS') return next();
+  if (req.path.startsWith('/api/')) return next(); // API-key authenticated, beacon has its own CORS
+  const origin = req.headers.origin, referer = req.headers.referer;
+  if (!origin && !referer) return next();
+  const hostOf = (u) => { try { return new URL(u).host; } catch (e) { return null; } };
+  const allowed = new Set([req.headers.host]);
+  try { allowed.add(new URL(cfg.baseUrl).host); } catch (e) {}
+  if ((!origin || allowed.has(hostOf(origin))) && (!referer || allowed.has(hostOf(referer)))) return next();
+  return res.status(403).send('Cross-site request blocked.');
+});
+
+app.use((req, res, next) => {
+  const auth = require('./lib/auth');
+  res.locals.can = (perm) => !!(req.session && req.session.admin && auth.can(req.session.admin.role, perm));
   res.locals.admin = req.session && req.session.admin || null;
   res.locals.cfg = cfg;
   res.locals.title = 'BlogForge';
@@ -73,6 +89,7 @@ app.get('/health', async (req, res) => {
 app.get('/', (req, res) => res.render('home', { title: 'BlogForge Engine' }));
 
 app.use('/api', require('./routes/api'));
+app.use('/public', require('./routes/public'));
 app.use('/admin', require('./routes/admin'));
 app.use('/', require('./routes/blog'));   // hosted blog + sitemap/rss/robots (site-resolved)
 

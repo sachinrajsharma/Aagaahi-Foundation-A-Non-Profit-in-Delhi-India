@@ -40,3 +40,14 @@ $ngo['study'] = [
     // automatically, so the coordinator sees them in the gradebook. Leave empty to let students enter a code themselves.
     'partner_code' => '',
 ];
+
+/**
+ * Dashboard (BlogForge CMS, see /blog-engine): when 'url' is set, the Blog page and the "Our work" gallery show what the
+ * team publishes in the dashboard. Leave 'url' empty to keep using includes/posts.json and includes/events.json.
+ *   url  : where the dashboard runs, e.g. https://cms.yourdomain.org  (no trailing slash)
+ *   site : the site's slug in the dashboard (Sites page)
+ */
+$ngo['cms'] = [
+    'url'  => '',
+    'site' => 'aagahi',
+];

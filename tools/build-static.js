@@ -11,6 +11,7 @@ function val(key) {
 const grab = k => (cfg.match(new RegExp("'" + k + "'\\s*=>\\s*'([^']*)'")) || [])[1] || '';
 const engineUrl = grab('engine_url').replace(/\/+$/, ''), siteSlug = grab('site_slug'), blogPath = grab('blog_url') || '/blog';
 const ngo = Object.fromEntries(['name', 'logo', 'tagline', 'mission', 'hero_image', 'email', 'phone', 'address', 'donate_url', 'reg_note'].map(k => [k, val(k)]));
+const cmsUrl = ((cfg.match(/'url'\s*=>\s*'([^']*)'/) || [])[1] || '').replace(/\/+$/, ''), cmsSite = (cfg.match(/'site'\s*=>\s*'([^']*)'/) || [])[1] || '';
 const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
 const VISIBLE = 6;
 const areas = JSON.parse(fs.readFileSync(root + '/includes/events.json', 'utf8')).areas;
@@ -67,7 +68,7 @@ const html = `<!DOCTYPE html>
 
 <section><div class="wrap"><div class="study-band"><h2>Free study for Class 1 to 12</h2><p>Lessons, worked examples and practice tests in Maths, Science, English and more. Study right here, no sign-up needed.</p><a class="btn" href="study/">Start studying</a></div></div></section>
 
-<section id="work"><div class="wrap">
+<section id="work" data-cms="${esc(cmsUrl)}" data-site="${esc(cmsSite)}"><div class="wrap">
   <h2 class="reveal">Our work, in pictures</h2><p>Highlights from programmes and events we have run in the community.</p>
 ${events}
 </div></section>
@@ -83,6 +84,7 @@ ${events}
 <footer>© ${new Date().getFullYear()} ${esc(ngo.name)} · ${esc(ngo.reg_note)}</footer>
 <script src="assets/common.js"></script>
 <script src="assets/gallery.js"></script>
+<script src="assets/gallery-live.js"></script>
 <script src="assets/nav.js"></script>
 ${engineUrl && siteSlug ? `<script src="${esc(engineUrl)}/js/track.js" data-site="${esc(siteSlug)}" data-engine="${esc(engineUrl)}" data-page-type="home" defer></script>` : ''}
 </body>
@@ -130,7 +132,7 @@ const studyHtml = `<!DOCTYPE html>
 const postsFile = root + '/includes/posts.json';
 const posts = (fs.existsSync(postsFile) ? (JSON.parse(fs.readFileSync(postsFile, 'utf8')).posts || []) : [])
   .filter(p => p && p.title && /^[a-z0-9-]+$/i.test(p.slug || '')).sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')));
-function blogShell(title, pre, body, desc) {
+function blogShell(title, pre, body, desc, extraScripts) {
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -151,6 +153,7 @@ function blogShell(title, pre, body, desc) {
 <section><div class="wrap" style="max-width:820px">${body}</div></section>
 <footer>© ${new Date().getFullYear()} ${esc(ngo.name)} · ${esc(ngo.reg_note)}</footer>
 <script src="${pre}assets/nav.js"></script>
+${extraScripts || ''}
 </body>
 </html>
 `;
@@ -159,7 +162,7 @@ const listBody = posts.length
   ? '<h1 style="color:var(--g1)">Blog</h1><div class="grid">' + posts.map(p => `<a class="card" href="${esc(p.slug)}/"><h3>${esc(p.title)}</h3><p>${esc(p.excerpt || '')}</p><small>${esc(p.date || '')}</small></a>`).join('') + '</div>'
   : `<h1 style="color:var(--g1)">Blog</h1><p class="st-sub">Stories and updates from ${esc(ngo.name)} will appear here soon.</p>`;
 fs.mkdirSync(docs + '/blog', { recursive: true });
-fs.writeFileSync(docs + '/blog/index.html', blogShell('Blog', '../', listBody));
+fs.writeFileSync(docs + '/blog/index.html', blogShell('Blog', '../', `<div id="cms-blog" data-cms="${esc(cmsUrl)}" data-site="${esc(cmsSite)}">${listBody}</div>`, undefined, '<script src="../assets/blog.js"></script>'));
 posts.forEach(p => {
   fs.mkdirSync(docs + '/blog/' + p.slug, { recursive: true });
   fs.writeFileSync(docs + '/blog/' + p.slug + '/index.html', blogShell(p.title, '../../', `<article><h1 style="font-size:2.2rem;color:var(--g1)">${esc(p.title)}</h1><p class="st-sub">${esc(p.date || '')}</p>${p.content || ''}</article>`, p.excerpt));

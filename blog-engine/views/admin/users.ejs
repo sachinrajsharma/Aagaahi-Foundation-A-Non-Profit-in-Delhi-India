@@ -1,0 +1,69 @@
+<h1>Staff &amp; access</h1>
+<p class="muted">Add team members and choose what each person can do. <b>Editors</b> write posts and manage images and the gallery. <b>Admins</b> can also manage staff. <b>Super admins</b> can do everything, including sites and API keys.</p>
+
+<% if (flash) { %>
+  <div class="card" style="border-left:5px solid <%= flash.kind === 'ok' ? 'var(--green)' : 'var(--red)' %>">
+    <%= flash.text %>
+    <% if (flash.temp) { %>
+      <p style="margin:.8rem 0 0">Temporary password for <b><%= flash.tempFor %></b> (shown only once):<br>
+      <span class="mono" style="font-size:20px;font-weight:800;letter-spacing:1px"><%= flash.temp %></span></p>
+    <% } %>
+  </div>
+<% } %>
+
+<div class="card">
+  <h2 style="margin-top:0">Add a team member</h2>
+  <form method="POST" action="/admin/users">
+    <div class="row">
+      <div><label>Full name</label><input name="name" required maxlength="120"></div>
+      <div><label>Email</label><input name="email" type="email" required></div>
+      <div><label>Role</label>
+        <select name="role"><% roles.forEach(function (r) { %><option value="<%= r %>" <%= r === 'editor' ? 'selected' : '' %>><%= r.replace('_', ' ') %></option><% }); %></select></div>
+    </div>
+    <div class="row">
+      <div><label>Password <span class="muted">(leave empty to generate one)</span></label><input name="password" type="text" autocomplete="off" placeholder="min. 10 characters, or empty"></div>
+      <div><label>Can work on these sites</label>
+        <div style="display:flex;gap:14px;flex-wrap:wrap;padding-top:6px">
+          <% allSites.forEach(function (s) { %><label style="font-weight:500"><input type="checkbox" name="sites" value="<%= s.id %>" style="width:auto"> <%= s.name %></label><% }); %>
+          <% if (!allSites.length) { %><span class="muted">No sites yet</span><% } %>
+        </div></div>
+    </div>
+    <button class="btn" style="margin-top:12px">Create account</button>
+  </form>
+</div>
+
+<% users.forEach(function (u) {
+     var mine = (u.site_ids || '').split(',').filter(Boolean);
+     var manageable = (me.role === 'super_admin') || u.role !== 'super_admin'; %>
+<div class="card">
+  <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center">
+    <h3 style="margin:0"><%= u.name %> <span class="badge <%= u.is_active ? 'on' : 'off' %>"><%= u.is_active ? 'active' : 'disabled' %></span>
+      <span class="badge"><%= u.role.replace('_', ' ') %></span><% if (u.id === me.id) { %> <span class="muted">(you)</span><% } %></h3>
+    <span class="muted"><%= u.email %></span>
+  </div>
+  <% if (u.role !== 'super_admin') { %><p class="muted" style="margin:.4rem 0 0">Sites: <%= u.site_names || 'none yet' %></p><% } else { %><p class="muted" style="margin:.4rem 0 0">All sites</p><% } %>
+  <% if (manageable) { %>
+  <details style="margin-top:.8rem"><summary style="cursor:pointer;font-weight:700">Change access</summary>
+    <form method="POST" action="/admin/users/<%= u.id %>/update" style="margin-top:.6rem">
+      <div class="row">
+        <div><label>Role</label>
+          <select name="role" <%= u.id === me.id ? 'disabled' : '' %>>
+            <% roles.forEach(function (r) { %><option value="<%= r %>" <%= r === u.role ? 'selected' : '' %>><%= r.replace('_', ' ') %></option><% }); %>
+          </select></div>
+        <div><label>Sites</label>
+          <div style="display:flex;gap:14px;flex-wrap:wrap;padding-top:6px">
+            <% allSites.forEach(function (s) { %><label style="font-weight:500"><input type="checkbox" name="sites" value="<%= s.id %>" style="width:auto" <%= mine.indexOf(String(s.id)) !== -1 ? 'checked' : '' %>> <%= s.name %></label><% }); %>
+          </div></div>
+        <div><label>Account</label><label style="font-weight:500"><input type="checkbox" name="is_active" value="1" style="width:auto" <%= u.is_active ? 'checked' : '' %> <%= u.id === me.id ? 'disabled' : '' %>> Active (can sign in)</label></div>
+      </div>
+      <% if (u.id === me.id) { %><input type="hidden" name="role" value="<%= u.role %>"><input type="hidden" name="is_active" value="1"><% } %>
+      <button class="btn sm" style="margin-top:10px">Save</button>
+    </form>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px">
+      <form method="POST" action="/admin/users/<%= u.id %>/password" onsubmit="return confirm('Set a new temporary password for <%= u.email %>? Their old password stops working.')"><button class="btn sm ghost">Reset password</button></form>
+      <% if (u.id !== me.id) { %><form method="POST" action="/admin/users/<%= u.id %>/delete" onsubmit="return confirm('Delete <%= u.email %> for ever? This cannot be undone.')"><button class="btn sm red">Delete account</button></form><% } %>
+    </div>
+  </details>
+  <% } %>
+</div>
+<% }); %>

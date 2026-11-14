@@ -33,7 +33,7 @@
 
 <section><div class="wrap"><div class="study-band"><h2>Free study for Class 1 to 12</h2><p>Lessons, worked examples and practice tests in Maths, Science, English and more. Study right here, no sign-up needed.</p><a class="btn" href="study/">Start studying</a></div></div></section>
 
-<section id="work"><div class="wrap">
+<section id="work" data-cms="<?= e($ngo['cms']['url'] ?? '') ?>" data-site="<?= e($ngo['cms']['site'] ?? '') ?>"><div class="wrap">
   <h2 class="reveal">Our work, in pictures</h2><p>Highlights from programmes and events we have run in the community.</p>
   <?= events_html() ?>
 </div></section>
@@ -48,6 +48,7 @@
 <script src="assets/common.js"></script>
 <script src="assets/nav.js"></script>
 <script src="assets/gallery.js"></script>
+<script src="assets/gallery-live.js"></script>
 <?= blog_tracker("home") ?>
 </body>
 </html>

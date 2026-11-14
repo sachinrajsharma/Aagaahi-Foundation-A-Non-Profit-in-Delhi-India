@@ -1,0 +1,12 @@
+<h1>My account</h1>
+<% if (message) { %><div class="card" style="border-left:5px solid <%= ok ? 'var(--green)' : 'var(--red)' %>"><%= message %></div><% } %>
+<div class="card" style="max-width:520px">
+  <p><b><%= me.name %></b> · <%= me.email %> · <span class="badge"><%= me.role.replace('_', ' ') %></span></p>
+  <h2 style="margin-top:0">Change my password</h2>
+  <form method="POST" action="/admin/account/password">
+    <label>Current password</label><input name="current" type="password" required autocomplete="current-password">
+    <label>New password <span class="muted">(at least 10 characters)</span></label><input name="next" type="password" required minlength="10" autocomplete="new-password">
+    <label>Repeat new password</label><input name="again" type="password" required minlength="10" autocomplete="new-password">
+    <button class="btn" style="margin-top:12px">Change password</button>
+  </form>
+</div>

@@ -42,7 +42,7 @@ $title = $post['meta']['title'] ?? $post['title'] ?? 'Blog';
 <nav><div class="wrap"><a class="brand" href="/"><?= logo() ?> <?= e($ngo['name']) ?></a>
   <div><a class="m" href="/#work">Our Work</a><a class="m" href="/study/">Study</a><a class="m" href="/blog">Blog</a><a class="m" href="/#contact">Contact</a> <span class="navauth"><a class="m auth" data-auth="in" href="/study/#/login">Log in</a><a class="btn" data-auth="in" style="margin-left:1rem;padding:.6rem 1.3rem" href="/study/#/join">Create account</a><a class="btn" data-auth="out" hidden style="margin-left:1rem;padding:.6rem 1.3rem" href="/study/#/me">My progress</a></span></div></div></nav>
 <div class="wrap powered-row"><div class="powered">Powered by <a href="https://vidaara.org" target="_blank" rel="noopener">vidaara.org</a></div></div>
-<section><div class="wrap" style="max-width:820px">
+<section><div class="wrap" style="max-width:820px" id="cms-blog" data-cms="<?= e($ngo['cms']['url'] ?? '') ?>" data-site="<?= e($ngo['cms']['site'] ?? '') ?>">
 <?php if ($post): ?>
   <article><h1 style="font-size:2.4rem;color:var(--g1)"><?= e($post['title']) ?></h1><?= $post['content'] ?></article>
 <?php elseif ($slug === '' && $posts): ?>
@@ -54,6 +54,7 @@ $title = $post['meta']['title'] ?? $post['title'] ?? 'Blog';
 </div></section>
 <footer>© <?= date('Y') ?> <?= e($ngo['name']) ?></footer>
 <script src="assets/nav.js"></script>
+<script src="assets/blog.js"></script>
 <?= blog_tracker($post ? 'blog' : 'blog_index', $slug) ?>
 </body>
 </html>

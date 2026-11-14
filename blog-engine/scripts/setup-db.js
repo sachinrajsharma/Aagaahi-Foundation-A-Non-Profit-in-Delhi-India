@@ -3,6 +3,7 @@
 require('dotenv').config();
 const mysql  = require('mysql2/promise');
 const crypto = require('crypto');
+const bcrypt = require('bcryptjs');
 
 const DB = process.env.DB_NAME || 'blogforge';
 const sha256 = (s) => crypto.createHash('sha256').update(String(s)).digest('hex');
@@ -41,9 +42,49 @@ CREATE TABLE IF NOT EXISTS admins (
   name          VARCHAR(120) NOT NULL,
   email         VARCHAR(190) NOT NULL UNIQUE,
   password_hash VARCHAR(64)  NOT NULL,
-  role          ENUM('editor','admin','super_admin') DEFAULT 'super_admin',
+  role          ENUM('editor','admin','super_admin') DEFAULT 'editor',
   is_active     TINYINT(1)   DEFAULT 1,
   created_at    DATETIME     DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
+-- Which sites a staff member may work on (super admins implicitly have all).
+CREATE TABLE IF NOT EXISTS admin_sites (
+  admin_id INT NOT NULL,
+  site_id  INT NOT NULL,
+  PRIMARY KEY (admin_id, site_id),
+  FOREIGN KEY (admin_id) REFERENCES admins(id) ON DELETE CASCADE,
+  FOREIGN KEY (site_id)  REFERENCES sites(id)  ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+-- Event gallery: events (programmes) grouped by focus area, each with photos.
+CREATE TABLE IF NOT EXISTS events (
+  id           INT AUTO_INCREMENT PRIMARY KEY,
+  site_id      INT NOT NULL,
+  area         VARCHAR(160) NOT NULL DEFAULT 'General',
+  area_order   INT NOT NULL DEFAULT 0,
+  area_intro   VARCHAR(400) NULL,
+  title        VARCHAR(160) NOT NULL,
+  slug         VARCHAR(180) NOT NULL,
+  description  VARCHAR(1000) NULL,
+  sort_order   INT NOT NULL DEFAULT 0,
+  is_published TINYINT(1) NOT NULL DEFAULT 1,
+  created_at   DATETIME DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE KEY uq_event (site_id, slug),
+  KEY k_area (site_id, area_order, area, sort_order),
+  FOREIGN KEY (site_id) REFERENCES sites(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS event_photos (
+  id         INT AUTO_INCREMENT PRIMARY KEY,
+  event_id   INT NOT NULL,
+  url        VARCHAR(400) NOT NULL,
+  thumb_url  VARCHAR(400) NOT NULL,
+  width      INT NOT NULL DEFAULT 0,
+  height     INT NOT NULL DEFAULT 0,
+  alt        VARCHAR(300) NULL,
+  sort_order INT NOT NULL DEFAULT 0,
+  KEY k_event (event_id, sort_order),
+  FOREIGN KEY (event_id) REFERENCES events(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS categories (
@@ -152,7 +193,7 @@ CREATE TABLE IF NOT EXISTS page_views (
   const [[a]] = await conn.query('SELECT id FROM `' + DB + '`.admins WHERE email=?', [adminEmail]);
   if (!a) {
     await conn.query('INSERT INTO `' + DB + '`.admins (name,email,password_hash,role) VALUES (?,?,?,?)',
-      [process.env.ADMIN_NAME || 'Blog Admin', adminEmail, sha256(process.env.ADMIN_PASSWORD || 'change-me-now'), 'super_admin']);
+      [process.env.ADMIN_NAME || 'Blog Admin', adminEmail, await bcrypt.hash(process.env.ADMIN_PASSWORD || 'change-me-now', 12), 'super_admin']);
     console.log(`✓ Admin created: ${adminEmail}`);
   } else console.log(`• Admin already exists: ${adminEmail}`);
 
