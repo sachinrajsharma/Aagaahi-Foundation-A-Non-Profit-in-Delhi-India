@@ -1,0 +1,36 @@
+<div class="blog-hero">
+  <h1><%= site.brand_name || site.name %> — Blog</h1>
+  <p class="muted"><%= typeof metaDesc!=='undefined' ? metaDesc : '' %></p>
+</div>
+
+<% if (categories.length) { %>
+<div class="cat-chips">
+  <a href="<%= basePrefix %>/blog" class="<%= !activeCat ? 'active':'' %>">All</a>
+  <% categories.forEach(function(c){ %>
+    <a href="<%= basePrefix %>/blog?cat=<%= encodeURIComponent(c) %>" class="<%= activeCat===c ? 'active':'' %>"><%= c %></a>
+  <% }); %>
+</div>
+<% } %>
+
+<% if (!posts.length) { %>
+  <div class="card"><p class="muted">No posts published yet.</p></div>
+<% } %>
+
+<div class="postcards">
+  <% posts.forEach(function(p){ %>
+    <article class="postcard">
+      <a href="<%= basePrefix %>/blog/<%= p.slug %>">
+        <img src="<%= p.cover_image || 'https://placehold.co/640x360/ede9fe/7c3aed?text=' + encodeURIComponent((p.title||'Post').slice(0,20)) %>" alt="<%= p.title %>" loading="lazy">
+      </a>
+      <div class="body">
+        <% if (p.category){ %><span class="pill"><%= p.category %></span><% } %>
+        <h3><a href="<%= basePrefix %>/blog/<%= p.slug %>"><%= p.title %></a></h3>
+        <p class="muted" style="font-size:14px;flex:1"><%= p.excerpt || '' %></p>
+        <div class="meta-row" style="font-size:13px">
+          <span><%= p.author || site.default_author %></span>
+          <% if (p.reading_minutes){ %><span>· <%= p.reading_minutes %> min read</span><% } %>
+        </div>
+      </div>
+    </article>
+  <% }); %>
+</div>

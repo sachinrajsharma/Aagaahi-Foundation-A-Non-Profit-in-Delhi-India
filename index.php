@@ -1,4 +1,4 @@
-<?php require_once __DIR__ . '/includes/helpers.php'; require_once __DIR__ . '/includes/events.php'; ?>
+<?php require_once __DIR__ . '/includes/helpers.php'; require_once __DIR__ . '/includes/events.php'; require_once __DIR__ . '/includes/blog.php'; ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,7 +8,7 @@
 <body>
 <?php $areas = events_data(); $nProg = 0; $nPics = 0; foreach ($areas as $a) { $nProg += count($a["programs"]); foreach ($a["programs"] as $p) $nPics += count($p["images"]); } ?>
 <nav><div class="wrap"><a class="brand" href="#"><?= logo() ?> <?= e($ngo["name"]) ?></a>
-  <div><a class="m" href="#work">Our Work</a><a class="m" href="#contact">Contact</a> <a class="btn" style="margin-left:1.2rem;padding:.6rem 1.3rem" href="<?= e($ngo["donate_url"]) ?>">Support us</a></div></div></nav>
+  <div><a class="m" href="#work">Our Work</a><?php if (blog_enabled()) : ?><a class="m" href="<?= e($ngo["blog"]["blog_url"]) ?>">Blog</a><?php endif; ?><a class="m" href="#contact">Contact</a> <a class="btn" style="margin-left:1.2rem;padding:.6rem 1.3rem" href="<?= e($ngo["donate_url"]) ?>">Support us</a></div></div></nav>
 
 <header class="hero"><div class="wrap">
   <div class="reveal">
@@ -34,6 +34,8 @@
   <?= events_html() ?>
 </div></section>
 
+<?= blog_latest_html() ?>
+
 <section id="contact"><div class="wrap contact">
   <div><h2>Come grow with us</h2><p>Volunteer, partner with us, or bring your skills.</p><p><?php if ($ngo["email"]) echo "📧 " . e($ngo["email"]) . "<br>"; if ($ngo["phone"]) echo "📞 " . e($ngo["phone"]) . "<br>"; ?>📍 <?= e($ngo["address"]) ?></p></div>
   <?= contact_form() ?>
@@ -41,5 +43,6 @@
 <footer>© <?= date("Y") ?> <?= e($ngo["name"]) ?> · <?= e($ngo["reg_note"]) ?></footer>
 <script src="assets/common.js"></script>
 <script src="assets/gallery.js"></script>
+<?= blog_tracker("home") ?>
 </body>
 </html>

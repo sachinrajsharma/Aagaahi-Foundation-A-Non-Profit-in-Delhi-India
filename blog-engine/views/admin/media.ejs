@@ -1,0 +1,28 @@
+<h1>Media</h1>
+<div class="card">
+  <form method="POST" action="/admin/media/upload" enctype="multipart/form-data">
+    <input type="hidden" name="_form" value="1">
+    <label>Upload an image (png, jpg, gif, webp, svg, avif)</label>
+    <div class="row">
+      <div style="flex:2"><input type="file" name="file" accept="image/*" required></div>
+      <div><input name="alt" placeholder="Alt text (optional)"></div>
+      <div style="flex:0 0 auto"><button class="btn" type="submit">Upload</button></div>
+    </div>
+  </form>
+</div>
+
+<div class="postcards">
+  <% if(!items.length){ %><p class="muted">No images uploaded yet.</p><% } %>
+  <% items.forEach(function(m){ %>
+    <div class="postcard">
+      <img src="<%= m.url %>" alt="<%= m.alt || m.filename %>" loading="lazy" style="aspect-ratio:auto;max-height:200px;object-fit:contain;background:#f8fafc">
+      <div class="body">
+        <input class="mono" style="font-size:11px" value="<%= cfg.baseUrl %><%= m.url %>" readonly onclick="this.select()">
+        <div class="meta-row" style="font-size:12px">
+          <span><%= Math.round((m.size||0)/1024) %> KB</span>
+          <form method="POST" action="/admin/media/<%= m.id %>/delete" class="inline" onsubmit="return confirm('Delete this image?')"><button class="link" style="color:var(--red)">Delete</button></form>
+        </div>
+      </div>
+    </div>
+  <% }); %>
+</div>

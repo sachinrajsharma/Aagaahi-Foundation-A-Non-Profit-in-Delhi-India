@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="<%= (typeof site!=='undefined' && site && site.locale) ? site.locale : 'en' %>">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title><%= typeof title !== 'undefined' ? title : 'BlogForge' %></title>
+  <% if (typeof metaDesc !== 'undefined' && metaDesc) { %><meta name="description" content="<%= metaDesc %>"><% } %>
+  <meta name="robots" content="<%= typeof robots !== 'undefined' ? robots : (typeof publicView!=='undefined' && publicView ? 'index, follow' : 'noindex, nofollow') %>">
+  <% if (typeof canonical !== 'undefined' && canonical) { %><link rel="canonical" href="<%= canonical %>"><% } %>
+  <% if (typeof publicView !== 'undefined' && publicView) { %>
+    <meta property="og:type" content="<%= typeof ogType!=='undefined'?ogType:'website' %>">
+    <meta property="og:title" content="<%= title %>">
+    <% if (typeof metaDesc!=='undefined'&&metaDesc){ %><meta property="og:description" content="<%= metaDesc %>"><% } %>
+    <% if (typeof canonical!=='undefined'&&canonical){ %><meta property="og:url" content="<%= canonical %>"><% } %>
+    <% if (typeof meta!=='undefined'&&meta&&meta.ogImage){ %><meta property="og:image" content="<%= meta.ogImage %>"><meta name="twitter:image" content="<%= meta.ogImage %>"><% } %>
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="<%= title %>">
+    <% if (typeof metaDesc!=='undefined'&&metaDesc){ %><meta name="twitter:description" content="<%= metaDesc %>"><% } %>
+    <% if (typeof site!=='undefined'&&site){ %><link rel="alternate" type="application/rss+xml" title="<%= (site.brand_name||site.name) %> RSS" href="<%= basePrefix||'' %>/blog/rss.xml"><% } %>
+  <% } %>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <% if (typeof jsonLd !== 'undefined' && jsonLd) { %><%- jsonLd %><% } %>
+  <% if (typeof websiteJsonLd !== 'undefined' && websiteJsonLd) { %><%- websiteJsonLd %><% } %>
+</head>
+<body>
+  <% if (typeof publicView !== 'undefined' && publicView) { %>
+    <header class="topbar">
+      <a href="<%= (site.base_url||'') %>/" class="brand"><%= site.brand_name || site.name %></a>
+      <nav><a href="<%= basePrefix||'' %>/blog">Blog</a></nav>
+    </header>
+  <% } else { %>
+    <header class="topbar">
+      <a href="/" class="brand">Blog<span>Forge</span></a>
+      <nav>
+        <% if (typeof admin !== 'undefined' && admin) { %>
+          <% if (typeof sites!=='undefined' && sites && sites.length>1){ %>
+            <form action="/admin/switch-site" method="POST" class="site-switch">
+              <select name="site_id" onchange="this.form.submit()">
+                <% sites.forEach(function(s){ %><option value="<%= s.id %>" <%= (activeSite&&activeSite.id===s.id)?'selected':'' %>><%= s.name %></option><% }); %>
+              </select>
+            </form>
+          <% } %>
+          <a href="/admin">Dashboard</a>
+          <a href="/admin/posts">Posts</a>
+          <a href="/admin/insights">Analytics</a>
+          <a href="/admin/media">Media</a>
+          <a href="/admin/sites">Sites</a>
+          <form action="/admin/logout" method="POST" class="inline"><button class="link">Logout</button></form>
+        <% } else { %>
+          <a href="/admin/login">Admin</a>
+        <% } %>
+      </nav>
+    </header>
+  <% } %>
+  <main class="wrap">
+    <%- body %>
+  </main>
+  <% if (!(typeof publicView !== 'undefined' && publicView)) { %><footer class="foot">BlogForge Engine · blog dashboard + first-party SEO analytics</footer><% } %>
+</body>
+</html>

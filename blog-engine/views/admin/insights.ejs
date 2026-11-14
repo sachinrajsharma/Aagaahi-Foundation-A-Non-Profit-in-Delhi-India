@@ -1,0 +1,79 @@
+<% function pct(n){ return (n||0).toFixed(1)+'%'; } var maxDaily = Math.max(1, ...data.series.map(function(d){return d.views;})); %>
+<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+  <h1 style="margin:0">SEO Analytics</h1>
+  <div>
+    <a class="btn sm <%= days===7?'':'ghost' %>" href="/admin/insights?days=7">7d</a>
+    <a class="btn sm <%= days===30?'':'ghost' %>" href="/admin/insights?days=30">30d</a>
+    <a class="btn sm <%= days===90?'':'ghost' %>" href="/admin/insights?days=90">90d</a>
+  </div>
+</div>
+<p class="muted">Site: <strong><%= activeSite.name %></strong> · first-party data only (no third-party trackers)</p>
+
+<div class="grid stats">
+  <div class="stat"><b><%= data.sum.visitors %></b><span>Visitors (<%= days %>d)</span></div>
+  <div class="stat"><b><%= data.sum.views %></b><span>Page views</span></div>
+  <div class="stat"><b><%= data.sum.blogViews %></b><span>Blog reads</span></div>
+  <div class="stat"><b><%= data.sum.allVisitors %></b><span>All-time visitors</span></div>
+</div>
+
+<div class="card">
+  <h2 style="margin-top:0">Daily traffic</h2>
+  <div class="spark">
+    <% data.series.forEach(function(d){ %>
+      <div class="b" style="height:<%= Math.round(100*d.views/maxDaily) %>%" title="<%= d.day %>: <%= d.views %> views, <%= d.visitors %> visitors"></div>
+    <% }); %>
+  </div>
+  <p class="muted" style="font-size:12px;margin-bottom:0"><%= data.series[0] && data.series[0].day %> → today</p>
+</div>
+
+<div class="row">
+  <div class="card" style="flex:1;min-width:280px">
+    <h2 style="margin-top:0">Traffic sources</h2>
+    <% if(!data.sources.length){ %><p class="muted">No data yet.</p><% } %>
+    <% data.sources.forEach(function(s){ %>
+      <div class="bar-row"><span class="lbl"><%= s.source %></span>
+        <div class="bar-track"><div class="bar-fill" style="width:<%= Math.max(3,s.share) %>%"></div></div>
+        <span class="bar-val"><%= pct(s.share) %></span></div>
+    <% }); %>
+  </div>
+  <div class="card" style="flex:1;min-width:220px">
+    <h2 style="margin-top:0">Devices</h2>
+    <% data.devices.forEach(function(d){ %>
+      <div class="bar-row"><span class="lbl"><%= d.device %></span>
+        <div class="bar-track"><div class="bar-fill" style="width:<%= Math.max(3,d.share) %>%"></div></div>
+        <span class="bar-val"><%= pct(d.share) %></span></div>
+    <% }); %>
+    <h2>Page types</h2>
+    <% data.types.forEach(function(t){ %>
+      <div class="bar-row"><span class="lbl"><%= t.label %></span>
+        <div class="bar-track"><div class="bar-fill" style="width:<%= Math.max(3,t.share) %>%"></div></div>
+        <span class="bar-val"><%= t.views %></span></div>
+    <% }); %>
+  </div>
+</div>
+
+<div class="card">
+  <h2 style="margin-top:0">Top posts (<%= days %>d)</h2>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Post</th><th>Status</th><th>Views</th><th>Readers</th><th>All-time</th></tr></thead>
+    <tbody>
+      <% if(!data.posts.length){ %><tr><td colspan="5" class="muted">No tracked reads in this window.</td></tr><% } %>
+      <% data.posts.forEach(function(p){ %>
+        <tr><td><a href="/admin/posts" title="<%= p.title %>"><%= p.title %></a></td>
+        <td><span class="badge <%= p.status %>"><%= p.status %></span></td>
+        <td><%= p.views %></td><td><%= p.readers %></td><td><%= p.all_time %></td></tr>
+      <% }); %>
+    </tbody>
+  </table></div>
+</div>
+
+<div class="card">
+  <h2 style="margin-top:0">Countries</h2>
+  <% if(!data.countries.length){ %><p class="muted">No country data yet (install <span class="mono">geoip-country</span> to enable).</p><% } %>
+  <% data.countries.slice(0,12).forEach(function(c){ %>
+    <div class="bar-row"><span class="lbl"><%= c.name %></span>
+      <div class="bar-track"><div class="bar-fill" style="width:<%= Math.max(3,c.share) %>%"></div></div>
+      <span class="bar-val"><%= c.visitors %></span></div>
+  <% }); %>
+  <% if(data.countries.unknown){ %><p class="muted" style="font-size:12px"><%= data.countries.unknown %> visitors with no detected country (local / unmapped).</p><% } %>
+</div>

@@ -18,3 +18,17 @@ $ngo = [
     'reg_note' => 'Non-profit organisation • Delhi, India',
     'social' => [],
 ];
+
+/**
+ * Blog + SEO analytics (BlogForge engine, see /blog-engine).
+ * Leave engine_url empty to hide the blog everywhere. Put real keys in includes/config.local.php
+ * (git-ignored) so they are never committed:   $ngo['blog']['api_key'] = 'pk_...';
+ */
+$ngo['blog'] = [
+    'engine_url' => '',   // e.g. https://blog.aagahi.org  (where blog-engine is hosted)
+    'site_slug'  => '',   // site slug from the engine admin > Sites (public; used by the view beacon)
+    'api_key'    => '',   // pk_... key from admin > Sites (server-side only; set in config.local.php)
+    'api_secret' => '',   // sk_... (only needed for webhooks)
+    'blog_url'   => '/blog',
+];
+if (is_file(__DIR__ . '/config.local.php')) require __DIR__ . '/config.local.php';

@@ -26,3 +26,19 @@ node tools/build-static.js
 - Photos: `assets/img/<programme>/NN.webp` (full, max 1400px) and `NN-t.webp` (thumbnail). Originals (~400 MB) were compressed to ~6 MB; EXIF/GPS data stripped.
 
 > Email, phone and the donate link are not filled in yet. Programme descriptions are short summaries based on the folder names; please review them.
+
+## Blog + SEO analytics (BlogForge engine)
+`blog-engine/` is the standalone BlogForge dashboard (Node 18+ and MySQL): rich editor, Yoast-style SEO assistant, sitemap/RSS/JSON-LD and first-party analytics. See `blog-engine/README.md`.
+
+It needs a server, so it **cannot run on GitHub Pages**. Host it separately (VPS, Render, Railway, etc.), then connect this site:
+1. In the engine: `npm install`, set `.env`, `npm run setup-db`, `npm start`. Open `/admin` → Sites → create a site for Aagahi and copy its slug and API key.
+2. Create `includes/config.local.php` (git-ignored) with the keys, and set the engine URL:
+   ```php
+   <?php
+   $ngo['blog']['engine_url'] = 'https://blog.your-domain.org';
+   $ngo['blog']['site_slug']  = 'aagahi';
+   $ngo['blog']['api_key']    = 'pk_...';
+   ```
+3. The PHP site then shows a **Blog** nav link, a "Latest from our blog" block on the homepage, `/blog` and `/blog/<slug>` pages in the site's own layout (needs the included `.htaccess` on Apache), and sends anonymous page-view beacons to the engine's analytics.
+
+Until `engine_url` is set, all of this stays hidden. For the static GitHub Pages copy, set only `engine_url`, `site_slug` and `blog_url` in `includes/config.php`, then run `node tools/build-static.js`.

@@ -8,6 +8,8 @@ function val(key) {
   if (!m) return '';
   return [...m[1].matchAll(/'((?:[^'\\]|\\.)*)'/g)].map(x => x[1].replace(/\\'/g, "'")).join('');
 }
+const grab = k => (cfg.match(new RegExp("'" + k + "'\\s*=>\\s*'([^']*)'")) || [])[1] || '';
+const engineUrl = grab('engine_url').replace(/\/+$/, ''), siteSlug = grab('site_slug'), blogPath = grab('blog_url') || '/blog';
 const ngo = Object.fromEntries(['name', 'logo', 'tagline', 'mission', 'hero_image', 'email', 'phone', 'address', 'donate_url', 'reg_note'].map(k => [k, val(k)]));
 const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
 const VISIBLE = 6;
@@ -41,7 +43,7 @@ const html = `<!DOCTYPE html>
 </head>
 <body>
 <nav><div class="wrap"><a class="brand" href="#"><span class="logo-emoji">${esc(ngo.logo)}</span> ${esc(ngo.name)}</a>
-  <div><a class="m" href="#work">Our Work</a><a class="m" href="#contact">Contact</a> <a class="btn" style="margin-left:1.2rem;padding:.6rem 1.3rem" href="${esc(ngo.donate_url)}">Support us</a></div></div></nav>
+  <div><a class="m" href="#work">Our Work</a>${engineUrl ? `<a class="m" href="${esc(blogPath)}">Blog</a>` : ''}<a class="m" href="#contact">Contact</a> <a class="btn" style="margin-left:1.2rem;padding:.6rem 1.3rem" href="${esc(ngo.donate_url)}">Support us</a></div></div></nav>
 
 <header class="hero"><div class="wrap">
   <div class="reveal">
@@ -78,6 +80,7 @@ ${events}
 <footer>© ${new Date().getFullYear()} ${esc(ngo.name)} · ${esc(ngo.reg_note)}</footer>
 <script src="assets/common.js"></script>
 <script src="assets/gallery.js"></script>
+${engineUrl && siteSlug ? `<script src="${esc(engineUrl)}/js/track.js" data-site="${esc(siteSlug)}" data-engine="${esc(engineUrl)}" data-page-type="home" defer></script>` : ''}
 </body>
 </html>
 `;

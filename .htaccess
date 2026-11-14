@@ -1,0 +1,4 @@
+# Pretty URLs for the blog: /blog and /blog/my-post -> blog/index.php
+RewriteEngine On
+RewriteRule ^blog/?$ blog/index.php [L]
+RewriteRule ^blog/([^/]+)/?$ blog/index.php?slug=$1 [L,QSA]

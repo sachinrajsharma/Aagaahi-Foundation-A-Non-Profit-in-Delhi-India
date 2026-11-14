@@ -1,0 +1,44 @@
+<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+  <h1 style="margin:0">Dashboard</h1>
+  <a class="btn" href="/admin/posts/new">+ New post</a>
+</div>
+<p class="muted">Site: <strong><%= activeSite.name %></strong> · last 30 days</p>
+
+<div class="grid stats">
+  <div class="stat"><b><%= sum.visitors %></b><span>Visitors (30d)</span></div>
+  <div class="stat"><b><%= sum.views %></b><span>Page views (30d)</span></div>
+  <div class="stat"><b><%= counts.published || 0 %></b><span>Published</span></div>
+  <div class="stat"><b><%= counts.draft || 0 %></b><span>Drafts</span></div>
+  <div class="stat"><b><%= sum.todayVisitors %></b><span>Visitors today</span></div>
+</div>
+
+<div class="row" style="margin-top:6px">
+  <div class="card" style="flex:2;min-width:300px">
+    <h2 style="margin-top:0">Recent posts</h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Title</th><th>Status</th><th>Views</th><th></th></tr></thead>
+      <tbody>
+        <% if(!recent.length){ %><tr><td colspan="4" class="muted">No posts yet. <a href="/admin/posts/new">Write your first →</a></td></tr><% } %>
+        <% recent.forEach(function(p){ %>
+          <tr>
+            <td><a href="/admin/posts/<%= p.id %>/edit"><%= p.title %></a></td>
+            <td><span class="badge <%= p.status %>"><%= p.status %></span></td>
+            <td><%= p.views %></td>
+            <td><a href="/blog/<%= p.slug %>?site=<%= activeSite.slug %>" target="_blank">view</a></td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table></div>
+  </div>
+  <div class="card" style="flex:1;min-width:240px">
+    <h2 style="margin-top:0">Top posts (30d)</h2>
+    <% if(!top.length){ %><p class="muted">No tracked reads yet.</p><% } %>
+    <% top.forEach(function(t){ %>
+      <div class="bar-row">
+        <span class="lbl" title="<%= t.title %>"><%= t.title.length>18 ? t.title.slice(0,18)+'…' : t.title %></span>
+        <span class="bar-val"><%= t.readers %> readers</span>
+      </div>
+    <% }); %>
+    <p style="margin-top:12px"><a href="/admin/insights">Full analytics →</a></p>
+  </div>
+</div>

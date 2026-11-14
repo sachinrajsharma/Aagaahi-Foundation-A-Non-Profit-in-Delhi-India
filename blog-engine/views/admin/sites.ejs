@@ -1,0 +1,62 @@
+<h1>Sites &amp; API keys</h1>
+<p class="muted">Each website that uses this engine is one "site". Set its <strong>domain</strong> (so a reverse-proxied <span class="mono">/blog</span> resolves to it) and <strong>base URL</strong> (used for canonical, sitemap, OG). Give the site its API key for headless integration.</p>
+
+<div class="card">
+  <h2 style="margin-top:0">Add a site</h2>
+  <form method="POST" action="/admin/sites">
+    <div class="row">
+      <div><label>Name</label><input name="name" required placeholder="Client Blog"></div>
+      <div><label>Slug</label><input name="slug" placeholder="client-blog"></div>
+      <div><label>Brand name</label><input name="brand_name" placeholder="Client Inc."></div>
+    </div>
+    <div class="row">
+      <div><label>Domain (for proxy resolution)</label><input name="domain" placeholder="clientsite.com"></div>
+      <div><label>Base URL (public origin)</label><input name="base_url" placeholder="https://clientsite.com"></div>
+      <div><label>Blog path</label><input name="blog_path" value="/blog"></div>
+    </div>
+    <div class="row">
+      <div><label>Default author</label><input name="default_author" value="Editorial"></div>
+      <div><label>Webhook URL (optional)</label><input name="webhook_url" placeholder="https://clientsite.com/blogforge/webhook"></div>
+    </div>
+    <button class="btn" style="margin-top:12px">Create site</button>
+  </form>
+</div>
+
+<% sites.forEach(function(s){ %>
+<div class="card">
+  <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+    <h2 style="margin:0"><%= s.name %> <span class="badge <%= s.is_active?'on':'off' %>"><%= s.is_active?'active':'off' %></span></h2>
+    <form method="POST" action="/admin/sites/<%= s.id %>/rotate" class="inline" onsubmit="return confirm('Rotate keys? The old key stops working immediately.')"><button class="btn ghost sm">Rotate keys</button></form>
+  </div>
+  <p class="mono" style="font-size:13px">API key: <strong><%= s.api_key %></strong><br>API secret: <strong><%= s.api_secret %></strong></p>
+  <p class="muted" style="font-size:13px">Hosted blog (path mode): <a href="/sites/<%= s.slug %>/blog" target="_blank"><span class="mono">/sites/<%= s.slug %>/blog</span></a> · sitemap <span class="mono">/sites/<%= s.slug %>/blog/sitemap.xml</span></p>
+  <form method="POST" action="/admin/sites/<%= s.id %>">
+    <div class="row">
+      <div><label>Name</label><input name="name" value="<%= s.name %>"></div>
+      <div><label>Brand name</label><input name="brand_name" value="<%= s.brand_name||'' %>"></div>
+    </div>
+    <div class="row">
+      <div><label>Domain</label><input name="domain" value="<%= s.domain||'' %>"></div>
+      <div><label>Base URL</label><input name="base_url" value="<%= s.base_url||'' %>"></div>
+      <div><label>Blog path</label><input name="blog_path" value="<%= s.blog_path||'/blog' %>"></div>
+    </div>
+    <div class="row">
+      <div><label>Default author</label><input name="default_author" value="<%= s.default_author||'Editorial' %>"></div>
+      <div><label>Logo URL</label><input name="logo_url" value="<%= s.logo_url||'' %>"></div>
+      <div><label>Webhook URL</label><input name="webhook_url" value="<%= s.webhook_url||'' %>"></div>
+    </div>
+    <label style="display:flex;align-items:center;gap:8px;margin-top:10px"><input type="checkbox" name="is_active" style="width:auto" <%= s.is_active?'checked':'' %>> Active</label>
+    <button class="btn sm" style="margin-top:10px">Save</button>
+  </form>
+</div>
+<% }); %>
+
+<div class="card">
+  <h2 style="margin-top:0">Add a category (to the active site: <%= activeSite.name %>)</h2>
+  <form method="POST" action="/admin/categories">
+    <div class="row">
+      <div><label>Category name</label><input name="name" required placeholder="Tutorials"></div>
+      <div style="flex:0 0 auto"><label>&nbsp;</label><button class="btn">Add</button></div>
+    </div>
+  </form>
+</div>

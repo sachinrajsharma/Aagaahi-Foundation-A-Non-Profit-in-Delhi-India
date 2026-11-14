@@ -1,0 +1,33 @@
+{
+  "name": "blogforge-engine",
+  "version": "1.0.0",
+  "description": "Independent, drop-in Blog Dashboard + first-party SEO Analytics engine. Serve any website — PHP, Laravel, or Node — via a hosted blog (reverse-proxy friendly), a headless REST API, sitemap/RSS/JSON-LD, and a Yoast-style on-page SEO assistant.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "setup-db": "node scripts/setup-db.js",
+    "seed": "node scripts/seed-demo.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
+    "express": "^4.19.2",
+    "express-ejs-layouts": "^2.5.1",
+    "express-mysql-session": "^3.0.3",
+    "express-rate-limit": "^7.4.0",
+    "express-session": "^1.18.0",
+    "helmet": "^7.1.0",
+    "morgan": "^1.10.0",
+    "multer": "^2.3.0",
+    "mysql2": "^3.11.0"
+  },
+  "optionalDependencies": {
+    "geoip-country": "^4.1.0"
+  },
+  "license": "UNLICENSED",
+  "private": true
+}

@@ -1,1 +1,4 @@
 includes/messages.log
+
+# Local secrets
+includes/config.local.php

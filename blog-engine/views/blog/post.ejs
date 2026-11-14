@@ -1,0 +1,28 @@
+<article class="article">
+  <p><a href="<%= basePrefix %>/blog">← Blog</a></p>
+  <% if (post.category){ %><span class="pill"><%= post.category %></span><% } %>
+  <h1 style="font-size:32px;line-height:1.2;margin:10px 0"><%= post.title %></h1>
+  <div class="meta-row">
+    <span>By <strong><%= post.author || site.default_author %></strong></span>
+    <% if (post.published_at){ %><span>· <%= new Date(post.published_at).toLocaleDateString(undefined,{year:'numeric',month:'long',day:'numeric'}) %></span><% } %>
+    <% if (post.reading_minutes){ %><span>· <%= post.reading_minutes %> min read</span><% } %>
+  </div>
+  <% if (post.cover_image){ %><img class="cover" src="<%= post.cover_image %>" alt="<%= post.title %>"><% } %>
+
+  <div class="article-body"><%- post.content %></div>
+</article>
+
+<% if (related && related.length) { %>
+<section class="article" style="margin-top:40px">
+  <h2>Related posts</h2>
+  <div class="postcards">
+    <% related.forEach(function(r){ %>
+      <article class="postcard">
+        <a href="<%= basePrefix %>/blog/<%= r.slug %>"><img src="<%= r.cover_image || 'https://placehold.co/640x360/ede9fe/7c3aed?text=Post' %>" alt="<%= r.title %>" loading="lazy"></a>
+        <div class="body"><h3><a href="<%= basePrefix %>/blog/<%= r.slug %>"><%= r.title %></a></h3>
+        <p class="muted" style="font-size:14px"><%= r.excerpt || '' %></p></div>
+      </article>
+    <% }); %>
+  </div>
+</section>
+<% } %>

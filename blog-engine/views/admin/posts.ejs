@@ -1,0 +1,42 @@
+<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+  <h1 style="margin:0">Posts</h1>
+  <a class="btn" href="/admin/posts/new">+ New post</a>
+</div>
+<% if (success) { %><div class="notice ok"><%= success %></div><% } %>
+<p>
+  <a class="btn sm <%= status===''?'':'ghost' %>" href="/admin/posts">All</a>
+  <a class="btn sm <%= status==='published'?'':'ghost' %>" href="/admin/posts?status=published">Published</a>
+  <a class="btn sm <%= status==='draft'?'':'ghost' %>" href="/admin/posts?status=draft">Drafts</a>
+  <a class="btn sm <%= status==='scheduled'?'':'ghost' %>" href="/admin/posts?status=scheduled">Scheduled</a>
+</p>
+<div class="table-wrap">
+  <table>
+    <thead><tr><th>Title</th><th>Status</th><th>Category</th><th>SEO</th><th>Views</th><th>Updated</th><th></th></tr></thead>
+    <tbody>
+      <% if(!posts.length){ %><tr><td colspan="7" class="muted">No posts.</td></tr><% } %>
+      <% posts.forEach(function(p){ %>
+        <tr>
+          <td><a href="/admin/posts/<%= p.id %>/edit"><%= p.title %></a></td>
+          <td><span class="badge <%= p.status %>"><%= p.status %></span></td>
+          <td><%= p.category || '—' %></td>
+          <td><% if(p.seo_score!=null){ %><span class="badge <%= p.seo_score>=80?'published':(p.seo_score>=55?'scheduled':'off') %>"><%= p.seo_score %></span><% } else { %>—<% } %></td>
+          <td><%= p.views %></td>
+          <td class="muted" style="font-size:13px"><%= new Date(p.updated_at).toLocaleDateString() %></td>
+          <td>
+            <button class="link toggle" data-id="<%= p.id %>" data-status="<%= p.status %>" style="color:var(--brand)"><%= p.status==='published'?'Unpublish':'Publish' %></button>
+            &nbsp;<form method="POST" action="/admin/posts/<%= p.id %>/delete" class="inline" onsubmit="return confirm('Delete this post?')"><button class="link" style="color:var(--red)">Delete</button></form>
+          </td>
+        </tr>
+      <% }); %>
+    </tbody>
+  </table>
+</div>
+<script>
+document.querySelectorAll('.toggle').forEach(function(b){
+  b.addEventListener('click', function(){
+    fetch('/admin/posts/'+b.dataset.id+'/toggle',{method:'POST'}).then(r=>r.json()).then(function(j){
+      if(j.ok) location.reload();
+    });
+  });
+});
+</script>
