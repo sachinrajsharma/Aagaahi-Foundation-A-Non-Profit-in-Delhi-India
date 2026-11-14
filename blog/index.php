@@ -33,9 +33,9 @@ $title = $post['meta']['title'] ?? $post['title'] ?? 'Blog';
 <?php endif; ?>
 </head>
 <body>
-<div class="powered">Powered by <a href="https://vidaara.org" target="_blank" rel="noopener">vidaara.org</a></div>
 <nav><div class="wrap"><a class="brand" href="/"><?= logo() ?> <?= e($ngo['name']) ?></a>
   <div><a class="m" href="/#work">Our Work</a><a class="m" href="/blog">Blog</a><a class="m" href="/#contact">Contact</a></div></div></nav>
+<div class="wrap powered-row"><div class="powered">Powered by <a href="https://vidaara.org" target="_blank" rel="noopener">vidaara.org</a></div></div>
 <section><div class="wrap" style="max-width:820px">
 <?php if ($post): ?>
   <article><h1 style="font-size:2.4rem;color:var(--g1)"><?= e($post['title']) ?></h1><?= $post['content'] ?></article>

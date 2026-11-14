@@ -56,7 +56,8 @@ footer{background:var(--g1);color:#d1fae5;text-align:center;padding:2rem 0;margi
 .lb button{position:absolute;background:#fff2;color:#fff;border:0;font-size:2rem;width:3rem;height:3rem;border-radius:50%;cursor:pointer}
 .lb .x{top:1rem;right:1rem}.lb .p{left:1rem;top:50%}.lb .n{right:1rem;top:50%}
 .lb .c{position:absolute;bottom:1rem;color:#fff;font-weight:700}
-/* ---- "Powered by" top strip ---- */
-.powered{background:#f1f6ee;border-bottom:1px solid #14532d14;text-align:center;font:600 .72rem/1 'Nunito',sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#14532d99;padding:.5rem 1rem}
-.powered a{color:#14532d;font-weight:800;letter-spacing:.06em;text-transform:none;font-size:.78rem;margin-left:.35rem;border-bottom:1px dotted #22c55e;transition:.2s}
+/* ---- "Powered by" under the nav links, right-aligned ---- */
+.powered-row{display:flex;justify-content:flex-end;margin-top:-.9rem;position:relative;z-index:2}
+.powered{font:600 .68rem/1 'Nunito',sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#14532d80;padding:0 .2rem}
+.powered a{color:#14532d;font-weight:800;letter-spacing:.05em;text-transform:none;font-size:.76rem;margin-left:.3rem;border-bottom:1px dotted #22c55e;transition:.2s}
 .powered a:hover{color:#22c55e;border-bottom-style:solid}
