@@ -3,12 +3,28 @@
 //   #/                      grade picker          #/g/8/math                 chapters
 //   #/g/8                   subject picker        #/g/8/math/<chapter>       lesson
 //                                                 #/g/8/math/<chapter>/test  chapter test
+//   #/login  #/join (needs the coordinator's class code)  #/me (my progress, delete account)
 (function () {
   var root = document.getElementById('study');
   if (!root) return;
   var API = (root.getAttribute('data-api') || 'https://vidaara.org/api/v1').replace(/\/+$/, '');
   var cache = {};
   var PROG_KEY = 'aagahi-study-progress-v1';
+  var TOK_KEY = 'aagahi-study-token-v1', USER_KEY = 'aagahi-study-user-v1';
+  function token() { try { return localStorage.getItem(TOK_KEY) || ''; } catch (e) { return ''; } }
+  function me() { try { return JSON.parse(localStorage.getItem(USER_KEY)) || null; } catch (e) { return null; } }
+  function setSession(t, u) { try { localStorage.setItem(TOK_KEY, t); localStorage.setItem(USER_KEY, JSON.stringify(u || {})); } catch (e) {} }
+  function clearSession() { try { localStorage.removeItem(TOK_KEY); localStorage.removeItem(USER_KEY); } catch (e) {} }
+  // Calls the Vidaara partner API. Resolves { ok, status, data, error }; never rejects.
+  function papi(method, path, body) {
+    var h = { 'Content-Type': 'application/json' };
+    if (token()) h.Authorization = 'Bearer ' + token();
+    return fetch(API + '/partner' + path, { method: method, headers: h, body: body ? JSON.stringify(body) : undefined })
+      .then(function (r) { return r.json().then(function (j) { if (r.status === 401 && token()) clearSession(); return { ok: !!j.ok, status: r.status, data: j.data, error: j.error }; }); })
+      .catch(function () { return { ok: false, status: 0, error: 'No internet connection. Please try again.' }; });
+  }
+  // Fire-and-forget progress saving when signed in (the page keeps working signed out / offline).
+  function track(path, body) { if (token()) papi('POST', path, body); }
 
   /* ---------- helpers ---------- */
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
@@ -37,7 +53,19 @@
       try { window.renderMathInElement(el, { delimiters: [{ left: '$$', right: '$$', display: true }, { left: '\\[', right: '\\]', display: true }, { left: '\\(', right: '\\)', display: false }, { left: '$', right: '$', display: false }], throwOnError: false }); } catch (e) {}
     }
   }
-  function show(html) { root.innerHTML = html; math(root); window.scrollTo({ top: root.getBoundingClientRect().top + window.scrollY - 90, behavior: 'smooth' }); }
+  function bar() {
+    var u = me();
+    return '<div class="st-bar">' + (token() && u
+      ? '<span>Hi, <b>' + esc((u.name || '').split(' ')[0]) + '</b></span><a href="#/me">My progress</a><a href="#" data-logout>Sign out</a>'
+      : '<span>Save your progress:</span><a href="#/login">Sign in</a><a href="#/join">Join with class code</a>') + '</div>';
+  }
+  function show(html) { root.innerHTML = bar() + html; math(root); window.scrollTo({ top: root.getBoundingClientRect().top + window.scrollY - 90, behavior: 'smooth' }); }
+  root.addEventListener('click', function (e) {
+    var lo = e.target.closest && e.target.closest('[data-logout]');
+    if (!lo) return;
+    e.preventDefault();
+    papi('POST', '/logout').then(function () { clearSession(); location.hash = '#/'; route(); });
+  });
   function crumbs(parts) {
     return '<nav class="crumbs">' + parts.map(function (p) { return p.href ? '<a href="' + p.href + '">' + esc(p.t) + '</a>' : '<span>' + esc(p.t) + '</span>'; }).join(' <i>›</i> ') + '</nav>';
   }
@@ -80,8 +108,11 @@
 
   function viewChapters(g, sub) {
     loading();
-    get('/courses/' + g + '/' + sub).then(function (d) {
+    var serverP = token() ? papi('GET', '/progress?class=' + encodeURIComponent(g) + '&subject=' + encodeURIComponent(sub === 'math' ? 'mathematics' : sub)) : Promise.resolve(null);
+    Promise.all([get('/courses/' + g + '/' + sub), serverP]).then(function (both) {
+      var d = both[0], sp = both[1] && both[1].ok ? both[1].data.byChapter : {};
       var p = load();
+      Object.keys(sp).forEach(function (slug) { var k = g + '/' + sub + '/' + slug; p[k] = Object.assign({}, p[k] || {}, { done: (p[k] && p[k].done) || sp[slug].status === 'completed' }); });
       show(crumbs([{ t: 'Study', href: '#/' }, { t: 'Class ' + g, href: '#/g/' + g }, { t: d.subjectLabel }]) +
         '<h2>' + esc(d.subjectLabel) + ' · Class ' + esc(g) + '</h2><p class="st-sub">' + d.chapters.length + ' chapters</p><ol class="st-chapters">' +
         d.chapters.filter(function (c) { return c.available; }).map(function (c) {
@@ -139,6 +170,9 @@
       var c = d.chapter, topics = c.topics || [];
       var key = g + '/' + sub + '/' + slug;
       mark(key, { seen: Date.now() });
+      var lessonInfo = { class: g, subject: d.subject || sub, chapter_slug: slug, title: c.title || c.chapter_title, url: d.url };
+      track('/progress/lesson', lessonInfo);
+      startBeat();
       var html = crumbs([{ t: 'Study', href: '#/' }, { t: 'Class ' + g, href: '#/g/' + g }, { t: d.subjectLabel, href: '#/g/' + g + '/' + sub }, { t: c.title || c.chapter_title }]) +
         '<h2>' + esc(c.chapter_number || '') + (c.chapter_number ? '. ' : '') + esc(c.title || c.chapter_title) + '</h2>';
       if (topics.length > 1) html += '<ul class="st-toc">' + topics.map(function (t, i) { return '<li><a href="#" data-top="' + i + '">' + esc(t.title) + '</a></li>'; }).join('') + '</ul>';
@@ -155,7 +189,7 @@
         a.addEventListener('click', function (ev) { ev.preventDefault(); document.getElementById('top' + a.getAttribute('data-top')).scrollIntoView({ behavior: 'smooth', block: 'start' }); });
       });
       var md = document.getElementById('markdone');
-      if (md) { if ((load()[key] || {}).done) md.textContent = '✓ Marked as done'; md.addEventListener('click', function () { mark(key, { done: true }); md.textContent = '✓ Marked as done'; }); }
+      if (md) { if ((load()[key] || {}).done) md.textContent = '✓ Marked as done'; md.addEventListener('click', function () { mark(key, { done: true }); md.textContent = '✓ Marked as done'; track('/progress/lesson', Object.assign({ complete: true }, lessonInfo)); }); }
     }).catch(fail);
   }
 
@@ -163,7 +197,8 @@
     loading();
     var key = g + '/' + sub + '/' + slug;
     get('/courses/' + key + '/test/online').then(function (t) {
-      var qs = t.questions || [], i = 0, score = 0;
+      var ctx = { class: g, subject: t.subject || sub, chapter_slug: slug, test_type: 'online' };
+      var qs = t.questions || [], i = 0, score = 0, startedAt = Date.now();
       function back() { return '<a class="btn o" href="#/g/' + key + '">← Back to lesson</a>'; }
       function ask() {
         var q = qs[i];
@@ -186,6 +221,7 @@
       function finish() {
         var pct = Math.round(score / qs.length * 100), prev = (load()[key] || {}).score || 0;
         mark(key, { score: Math.max(pct, prev), done: pct >= 60 || (load()[key] || {}).done });
+        track('/progress/test', Object.assign({ score: score, total: qs.length, time_taken_s: Math.round((Date.now() - startedAt) / 1000) }, ctx));
         show(crumbs([{ t: 'Study', href: '#/' }, { t: 'Class ' + g, href: '#/g/' + g }, { t: t.chapterTitle || slug, href: '#/g/' + key }, { t: 'Result' }]) +
           '<div class="result"><div class="big-n">' + pct + '%</div><p>You got <b>' + score + '</b> of <b>' + qs.length + '</b> right. ' + (pct >= 80 ? 'Excellent work! 🎉' : pct >= 60 ? 'Good job, keep practising.' : 'Re-read the lesson and try again, you can do it.') + '</p></div>' +
           '<div class="st-actions"><a class="btn" href="#/g/' + key + '/test" onclick="location.reload()">Try again</a>' + back() + '</div>');
@@ -194,9 +230,117 @@
     }).catch(fail);
   }
 
+  /* ---------- accounts (Vidaara LMS) ---------- */
+  var beat = null;
+  function startBeat() {
+    stopBeat();
+    if (!token()) return;
+    beat = setInterval(function () { if (!document.hidden) papi('POST', '/heartbeat', { seconds: 30 }); }, 30000);
+  }
+  function stopBeat() { if (beat) { clearInterval(beat); beat = null; } }
+  function msg(el, text, bad) { if (!el) return; el.className = 'st-note' + (bad ? ' bad' : ''); el.textContent = text; }
+  function field(id, label, type, extra) { return '<label for="' + id + '">' + label + '</label><input id="' + id + '" name="' + id + '" type="' + (type || 'text') + '" ' + (extra || '') + ' required>'; }
+
+  function viewLogin() {
+    show(crumbs([{ t: 'Study', href: '#/' }, { t: 'Sign in' }]) + '<h2>Sign in</h2><p class="st-sub">Use the email and password you chose when you joined.</p>' +
+      '<form class="st-form" id="lf">' + field('email', 'Email', 'email', 'autocomplete="email"') + field('password', 'Password', 'password', 'autocomplete="current-password"') +
+      '<div id="lmsg" class="st-note"></div><button class="btn" type="submit">Sign in</button> <a class="btn o" href="#/join">I am new: join</a></form>');
+    document.getElementById('lf').addEventListener('submit', function (e) {
+      e.preventDefault();
+      var f = e.target, m = document.getElementById('lmsg'); msg(m, 'Signing in…');
+      papi('POST', '/login', { email: f.email.value, password: f.password.value }).then(function (r) {
+        if (!r.ok) return msg(m, r.error || 'Could not sign in.', true);
+        setSession(r.data.token, r.data.user); location.hash = '#/me';
+      });
+    });
+  }
+
+  function viewJoin() {
+    show(crumbs([{ t: 'Study', href: '#/' }, { t: 'Join' }]) + '<h2>Join with your class code</h2>' +
+      '<div class="st-info"><b>How it works</b><ul><li>Your Aagahi coordinator gives you a <b>class code</b> after your parent or guardian has agreed. You cannot join without it.</li>' +
+      '<li>We save only your <b>name, email, class and learning progress</b>. We never show ads or sell anything.</li>' +
+      '<li>You can delete your account and all your data at any time from <i>My progress</i>.</li></ul></div>' +
+      '<form class="st-form" id="jf">' + field('name', 'Student name', 'text', 'maxlength="60" autocomplete="name"') + field('email', 'Email', 'email', 'autocomplete="email"') +
+      field('password', 'Choose a password (8 or more characters)', 'password', 'minlength="8" autocomplete="new-password"') +
+      '<label for="grade">Class</label><select id="grade" name="grade" required><option value="">Choose…</option>' + [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(function (n) { return '<option>' + n + '</option>'; }).join('') + '</select>' +
+      field('code', 'Class code from your coordinator', 'text', 'maxlength="12" autocapitalize="characters" style="text-transform:uppercase"') +
+      '<input type="text" name="website" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" aria-hidden="true">' +
+      '<div id="jmsg" class="st-note"></div><button class="btn" type="submit">Create my account</button> <a class="btn o" href="#/login">I already have an account</a></form>');
+    document.getElementById('jf').addEventListener('submit', function (e) {
+      e.preventDefault();
+      var f = e.target, m = document.getElementById('jmsg'); msg(m, 'Creating your account…');
+      papi('POST', '/register', { name: f.name.value, email: f.email.value, password: f.password.value, grade: f.grade.value, code: f.code.value, website: f.website.value }).then(function (r) {
+        if (!r.ok) return msg(m, r.error || 'Could not create the account.', true);
+        setSession(r.data.token, r.data.user); location.hash = '#/me';
+      });
+    });
+  }
+
+  function stat(n, label) { return '<div class="st-stat"><b>' + esc(n) + '</b><small>' + esc(label) + '</small></div>'; }
+  function viewMe() {
+    if (!token()) { location.hash = '#/login'; return; }
+    loading();
+    papi('GET', '/me').then(function (r) {
+      if (!r.ok) { if (r.status === 401) { location.hash = '#/login'; return; } return fail(r.error); }
+      var d = r.data, dash = d.dashboard || {};
+      var html = crumbs([{ t: 'Study', href: '#/' }, { t: 'My progress' }]) + '<h2>Hi, ' + esc((d.user.name || '').split(' ')[0]) + '</h2>' +
+        (d.classes && d.classes[0] ? '<p class="st-sub">Your class: <b>' + esc(d.classes[0].name) + '</b></p>' : '') +
+        '<div class="st-stats">' + stat(dash.streak || 0, 'day streak') + stat(dash.lessonsCompleted || 0, 'chapters done') + stat(dash.testsTaken || 0, 'tests taken') + stat((dash.avgScore || 0) + '%', 'average score') + stat(dash.hours || 0, 'hours learned') + '</div>';
+      if ((dash.continueLearning || []).length) {
+        html += '<h3 class="st-group">Continue learning</h3><ol class="st-chapters">' + dash.continueLearning.map(function (c) {
+          var m = /\/courses\/([a-z-]+)\/class-(\d+)\/([a-z0-9-]+)/.exec(c.url || '');
+          var href = m ? '#/g/' + m[2] + '/' + m[1] + '/' + m[3] : '#/g/' + esc(c.class);
+          return '<li><a href="' + href + '"><span class="n">▶</span><span class="t">' + esc(c.title || c.chapter_slug) + '</span><span class="sc">' + esc(c.percent) + '%</span></a></li>';
+        }).join('') + '</ol>';
+      }
+      if ((dash.recentTests || []).length) {
+        html += '<h3 class="st-group">Recent tests</h3><ol class="st-chapters">' + dash.recentTests.map(function (t) {
+          return '<li><a href="#/g/' + esc(t.class) + '"><span class="n">' + esc(t.percentage) + '</span><span class="t">' + esc(t.chapter_slug) + '</span><span class="sc">' + esc(t.score) + '/' + esc(t.total) + '</span></a></li>';
+        }).join('') + '</ol>';
+      }
+      html += '<h3 class="st-group">Delete my account</h3><div id="delbox">' + deleteBox(d.deletion) + '</div>';
+      show(html); bindDelete();
+    });
+  }
+
+  function deleteBox(del) {
+    if (del && del.status === 'pending_admin') return '<div class="st-info">Your deletion request has been received. Our team will review it and email you when your account is deleted (always within 30 days).</div><button class="btn o" type="button" data-del="cancel">Cancel my request</button>';
+    if (del && del.status === 'awaiting_otp') return otpBox();
+    return '<div class="st-warn"><b>Please read this carefully.</b><ul><li>All your data will be deleted for ever: your name, email, progress, test scores and badges.</li><li>This cannot be undone.</li>' +
+      '<li><b>You will not be able to create a new account with this same email address.</b></li><li>Our team checks every request first, and you will get an email when it is done.</li></ul>' +
+      '<label class="st-check"><input type="checkbox" id="delack"> I understand all of this.</label><div id="delmsg" class="st-note"></div>' +
+      '<button class="btn danger" type="button" data-del="request">Email me a code</button></div>';
+  }
+  function otpBox() {
+    return '<div class="st-warn"><p>We emailed you a 6-digit code. It works for 10 minutes.</p><input id="delotp" class="st-otp" inputmode="numeric" maxlength="6" placeholder="······" autocomplete="one-time-code">' +
+      '<p><b>Last warning:</b> after you confirm, your request goes to our team. Once approved, everything is erased for ever and this email cannot be used again.</p><div id="delmsg" class="st-note"></div>' +
+      '<button class="btn danger" type="button" data-del="confirm">Confirm deletion request</button> <button class="btn o" type="button" data-del="cancel">Cancel</button></div>';
+  }
+  function bindDelete() {
+    var box = document.getElementById('delbox'); if (!box) return;
+    box.addEventListener('click', function (e) {
+      var b = e.target.closest('[data-del]'); if (!b) return;
+      var act = b.getAttribute('data-del'), m = function () { return document.getElementById('delmsg'); };
+      if (act === 'request') {
+        if (!document.getElementById('delack').checked) return msg(m(), 'Please tick the box to show you understand.', true);
+        msg(m(), 'Sending the code…');
+        papi('POST', '/me/delete/request', { ack: true }).then(function (r) { r.ok ? (box.innerHTML = otpBox()) : msg(m(), r.error, true); });
+      } else if (act === 'confirm') {
+        msg(m(), 'Checking…');
+        papi('POST', '/me/delete/confirm', { otp: document.getElementById('delotp').value }).then(function (r) { r.ok ? (box.innerHTML = deleteBox({ status: 'pending_admin' })) : msg(m(), r.error, true); });
+      } else if (act === 'cancel') {
+        papi('POST', '/me/delete/cancel').then(function () { box.innerHTML = deleteBox(null); });
+      }
+    });
+  }
+
   /* ---------- router ---------- */
   function route() {
     var parts = (location.hash.replace(/^#\/?/, '') || '').split('/').filter(Boolean);
+    stopBeat();
+    if (parts[0] === 'login') return viewLogin();
+    if (parts[0] === 'join') return viewJoin();
+    if (parts[0] === 'me') return viewMe();
     if (parts[0] !== 'g') return viewGrades();
     if (parts.length === 2) return viewSubjects(parts[1]);
     if (parts.length === 3) return viewChapters(parts[1], parts[2]);

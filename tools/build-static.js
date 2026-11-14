@@ -113,7 +113,7 @@ const studyHtml = `<!DOCTYPE html>
   <div><a class="m" href="../#work">Our Work</a><a class="m" href="./">Study</a><a class="m" href="../#contact">Contact</a></div></div></nav>
 <div class="wrap powered-row"><div class="powered">Powered by <a href="https://vidaara.org" target="_blank" rel="noopener">vidaara.org</a></div></div>
 <main class="wrap study-hero"><span class="tag">🎓 Free for every student</span><h1>Study with Aagahi</h1>
-  <p class="st-sub">Lessons, worked examples and practice tests for Class 1 to 12: Maths, Science, Physics, Chemistry, Biology, English and more. No sign-up needed.</p>
+  <p class="st-sub">Lessons, worked examples and practice tests for Class 1 to 12: Maths, Science, Physics, Chemistry, Biology, English and more. Study freely, or join with your class code to save your progress.</p>
   <div id="study" data-api="${esc(studyApi)}"><p class="st-msg">Loading…</p></div></main>
 <footer>© ${new Date().getFullYear()} ${esc(ngo.name)} · Study content by <a href="https://vidaara.org" target="_blank" rel="noopener">vidaara.org</a></footer>
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>

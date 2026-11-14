@@ -47,3 +47,11 @@ Until `engine_url` is set, all of this stays hidden. For the static GitHub Pages
 `/study/` lets students learn on this site without being redirected: pick a class → subject → chapter, read the lesson (maths rendered with KaTeX), open worked examples, check themselves with mini quizzes, and take a scored chapter test. Content is fetched live from Vidaara's public API (`https://vidaara.org/api/v1`, set in `includes/config.php` → `study.api_base`). Progress is saved in the student's own browser.
 
 The browser can only call that API if Vidaara sends CORS headers for the partner's origin; see the `feat/partner-cors` change in the Vidaara repo.
+
+### Student accounts and progress (Vidaara LMS)
+Students can optionally **join with a class code** and sign in to save progress (chapters done, test scores, streaks, time learned) and see it on **My progress**, without leaving this site. Accounts and progress live in Vidaara's LMS through its partner API (`/api/v1/partner`, see `docs/PARTNER-LMS.md` in the Vidaara repo), so the Aagahi coordinator sees every student in Vidaara's teacher gradebook.
+
+- **Class code = consent step.** The coordinator gives the code to a family in person after they agree. No code, no account.
+- Students can delete their account from **My progress** (email code, then admin approval).
+- Studying without an account still works; progress then stays in the browser only.
+- To onboard another NGO, only the API base and a class code are needed; there is nothing NGO-specific in the code.

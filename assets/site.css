@@ -91,3 +91,17 @@ footer{background:var(--g1);color:#d1fae5;text-align:center;padding:2rem 0;margi
 .result{text-align:center;background:#fff;border-radius:28px;padding:2rem;box-shadow:0 6px 22px #14532d10}.big-n{font:800 4rem 'Fraunces',serif;color:var(--g2)}
 .st-msg{padding:2rem;text-align:center;color:#4b5f52}.st-msg.err{background:#fef2f2;border-radius:18px;color:#991b1b}
 .katex{font-size:1.05em}.katex-display{overflow-x:auto;overflow-y:hidden}
+/* ---- Study accounts (sign in, join, my progress) ---- */
+.st-bar{display:flex;gap:1rem;justify-content:flex-end;align-items:center;font-size:.9rem;margin:0 0 .8rem;flex-wrap:wrap}
+.st-bar a{color:var(--g1);font-weight:800;border-bottom:2px solid var(--g2)}
+.st-form{background:#fff;border-radius:22px;padding:1.4rem;box-shadow:0 6px 22px #14532d10;display:grid;gap:.4rem;max-width:520px}
+.st-form label{font-weight:700;margin-top:.5rem}.st-form input,.st-form select{padding:.8rem 1rem;border:2px solid #cdeedb;border-radius:14px;font:inherit;background:#fff}
+.st-form input:focus,.st-form select:focus{outline:none;border-color:var(--g2)}.st-form .btn{border:0;font:inherit;font-weight:800;cursor:pointer;margin-top:.6rem}
+.st-note{min-height:1.2rem;margin:.4rem 0;color:#166534;font-weight:700}.st-note.bad{color:#b91c1c}
+.st-info{background:#ecfdf5;border:1px solid #a7f3d0;border-radius:18px;padding:1rem 1.2rem;margin:0 0 1rem;max-width:620px}.st-info ul{margin:.4rem 0 0;padding-left:1.2rem;line-height:1.7}
+.st-warn{background:#fef2f2;border:2px solid #fca5a5;border-radius:18px;padding:1.1rem 1.3rem;max-width:620px;color:#7f1d1d}.st-warn ul{margin:.4rem 0;padding-left:1.2rem;line-height:1.7}
+.st-check{display:flex;gap:.6rem;align-items:center;margin:.8rem 0}.st-check input{width:1.2rem;height:1.2rem}
+.btn.danger{background:#b91c1c;color:#fff;border:0;font:inherit;font-weight:800;cursor:pointer}.btn.danger:hover{background:#991b1b}
+.st-otp{font-size:1.6rem;letter-spacing:.5rem;text-align:center;width:100%;max-width:260px;padding:.7rem;border:2px solid #d1d5db;border-radius:12px}
+.st-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:.8rem;margin:1rem 0}
+.st-stat{background:#fff;border-radius:18px;padding:1rem;box-shadow:0 6px 22px #14532d10;text-align:center}.st-stat b{display:block;font:800 1.9rem 'Fraunces',serif;color:var(--g1)}.st-stat small{color:#5d7064}
