@@ -105,3 +105,24 @@ footer{background:var(--g1);color:#d1fae5;text-align:center;padding:2rem 0;margi
 .st-otp{font-size:1.6rem;letter-spacing:.5rem;text-align:center;width:100%;max-width:260px;padding:.7rem;border:2px solid #d1d5db;border-radius:12px}
 .st-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:.8rem;margin:1rem 0}
 .st-stat{background:#fff;border-radius:18px;padding:1rem;box-shadow:0 6px 22px #14532d10;text-align:center}.st-stat b{display:block;font:800 1.9rem 'Fraunces',serif;color:var(--g1)}.st-stat small{color:#5d7064}
+
+/* ---- auth pages styled like vidaara.org (card, captcha, pills) ---- */
+.auth-wrap{display:flex;justify-content:center;padding:1rem 0 2rem}
+.auth-card{background:#fff;border:1px solid #e5e7eb;border-radius:28px;padding:2.2rem 2rem;width:100%;max-width:460px;box-shadow:0 4px 32px #14532d12}
+.auth-logo{font:800 1.7rem 'Fraunces',serif;color:var(--g1)}.auth-tagline{font-size:.85rem;color:#64748b;margin-bottom:1.6rem}
+.auth-h{font:700 1.5rem 'Fraunces',serif;color:var(--g1);margin-bottom:.2rem}.auth-sub{font-size:.9rem;color:#64748b;margin-bottom:1.2rem}
+.free-badge{display:inline-flex;gap:.4rem;background:#dcfce7;color:var(--g1);font-size:.78rem;font-weight:700;padding:.3rem .8rem;border-radius:99px;margin-bottom:1.1rem}
+.form-group{margin-bottom:1rem}.form-label{display:block;font-size:.82rem;font-weight:700;color:var(--ink);margin-bottom:.4rem}
+.form-input{width:100%;padding:.75rem 1rem;border:1.5px solid #d1d5db;border-radius:14px;font:inherit;font-size:.95rem;background:var(--sand)}
+.form-input:focus{outline:none;border-color:var(--g2);background:#fff}
+.btn-auth{width:100%;padding:.85rem;background:var(--g1);color:#fff;border:0;border-radius:99px;font:inherit;font-weight:800;font-size:1rem;cursor:pointer;margin-top:.4rem;transition:.2s}
+.btn-auth:hover{background:var(--g2)}
+.auth-divider{text-align:center;font-size:.88rem;color:#64748b;margin:1.2rem 0 0}.auth-link{color:var(--g1);font-weight:800}.auth-link:hover{text-decoration:underline}
+.auth-error{background:#fff2f2;border:1px solid #ffcdd2;border-radius:14px;padding:.7rem 1rem;font-size:.88rem;color:#c62828;margin-bottom:1rem}
+.auth-fine{font-size:.78rem;color:#64748b;line-height:1.5;margin:.2rem 0 .8rem}
+.forgot{font-size:.82rem;text-align:right;margin:-.4rem 0 1rem}.forgot a{color:#2b5797}
+.captcha-row{display:flex;align-items:center;gap:.6rem;margin-bottom:.6rem}
+.captcha-img{flex:0 0 auto;line-height:0;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;background:#fff8ef;min-width:150px;min-height:56px;display:flex;align-items:center;justify-content:center;font-size:.8rem;color:#64748b}
+.captcha-img svg{display:block}
+.captcha-refresh{flex:0 0 auto;width:44px;height:44px;font-size:1.2rem;border:1.5px solid #d1d5db;border-radius:12px;background:var(--sand);color:var(--g1);cursor:pointer}
+.captcha-refresh:hover,.captcha-refresh:focus{border-color:var(--g2);background:#dcfce7;outline:none}

@@ -36,4 +36,7 @@ if (is_file(__DIR__ . '/config.local.php')) require __DIR__ . '/config.local.php
 /** Study section: free Class 1-12 lessons and tests, served by Vidaara's public content API. */
 $ngo['study'] = [
     'api_base' => 'https://vidaara.org/api/v1',
+    // This NGO's PUBLIC class code from Vidaara (teacher dashboard). Students who sign up on this site join that class
+    // automatically, so the coordinator sees them in the gradebook. Leave empty to let students enter a code themselves.
+    'partner_code' => '',
 ];

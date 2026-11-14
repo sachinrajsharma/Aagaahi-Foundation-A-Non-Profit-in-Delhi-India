@@ -94,6 +94,7 @@ fs.writeFileSync(docs + '/index.html', html);
 
 // ---- Study page (docs/study/index.html): a small JS app over the Vidaara content API
 const studyApi = (cfg.match(/'api_base'\s*=>\s*'([^']*)'/) || [])[1] || 'https://vidaara.org/api/v1';
+const partnerCode = (cfg.match(/'partner_code'\s*=>\s*'([^']*)'/) || [])[1] || '';
 const studyHtml = `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -113,8 +114,8 @@ const studyHtml = `<!DOCTYPE html>
   <div><a class="m" href="../#work">Our Work</a><a class="m" href="./">Study</a><a class="m" href="../#contact">Contact</a></div></div></nav>
 <div class="wrap powered-row"><div class="powered">Powered by <a href="https://vidaara.org" target="_blank" rel="noopener">vidaara.org</a></div></div>
 <main class="wrap study-hero"><span class="tag">🎓 Free for every student</span><h1>Study with Aagahi</h1>
-  <p class="st-sub">Lessons, worked examples and practice tests for Class 1 to 12: Maths, Science, Physics, Chemistry, Biology, English and more. Study freely, or join with your class code to save your progress.</p>
-  <div id="study" data-api="${esc(studyApi)}"><p class="st-msg">Loading…</p></div></main>
+  <p class="st-sub">Lessons, worked examples and practice tests for Class 1 to 12: Maths, Science, Physics, Chemistry, Biology, English and more. Study freely, or create a free account to save your progress.</p>
+  <div id="study" data-api="${esc(studyApi)}" data-partner-code="${esc(partnerCode)}"><p class="st-msg">Loading…</p></div></main>
 <footer>© ${new Date().getFullYear()} ${esc(ngo.name)} · Study content by <a href="https://vidaara.org" target="_blank" rel="noopener">vidaara.org</a></footer>
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
