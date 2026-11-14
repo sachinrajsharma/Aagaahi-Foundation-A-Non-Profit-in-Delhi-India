@@ -9,7 +9,10 @@ if (is_post()) {
     $up = $pdo->prepare('INSERT INTO settings (setting_key, setting_value, updated_by) VALUES (?,?,?) ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value), updated_by = VALUES(updated_by)');
     $errors = [];
     foreach ($labels as $k => $label) {
-        $v = post_str($k, $k === 'mission' ? 600 : 300);
+        $v = post_str($k, in_array($k, MULTILINE_SETTINGS, true) ? 600 : 300);
+        if (!in_array($k, MULTILINE_SETTINGS, true)) $v = preg_replace('/\s*[\r\n]+\s*/', ' ', $v);
+        if ($k === 'upi_id' && $v !== '' && !preg_match('/^[A-Za-z0-9._\-]{2,64}@[A-Za-z0-9]{2,32}$/', $v)) { $errors[] = 'The UPI id should look like name@bank.'; continue; }
+        if ($k === 'receipt_prefix') { $v = preg_replace('/[^A-Za-z0-9]/', '', $v) ?: 'AAG'; $v = substr($v, 0, 10); }
         if (in_array($k, ['email', 'notify_email'], true) && $v !== '' && !filter_var($v, FILTER_VALIDATE_EMAIL)) { $errors[] = "$label is not a valid email address."; continue; }
         if ($k === 'donate_url' && $v !== '' && !preg_match('#^(https://|/|\#)#', $v)) { $errors[] = 'The donate link must start with https:// (or / or #).'; continue; }
         if ($k === 'hero_image') { $v = clean_image_ref($v); }
@@ -39,7 +42,7 @@ foreach ($social as $k => $label) $socByKey[$k] = $soc[$label] ?? '';
 <form method="post" class="card"><?= csrf_field() ?>
   <?php foreach ($labels as $k => $label): ?>
     <label for="s_<?= h($k) ?>"><?= h($label) ?></label>
-    <?php if ($k === 'mission'): ?><textarea id="s_<?= h($k) ?>" name="<?= h($k) ?>" rows="3" maxlength="600"><?= h($vals[$k] ?? '') ?></textarea>
+    <?php if (in_array($k, MULTILINE_SETTINGS, true)): ?><textarea id="s_<?= h($k) ?>" name="<?= h($k) ?>" rows="3" maxlength="600"><?= h($vals[$k] ?? '') ?></textarea>
     <?php else: ?><input id="s_<?= h($k) ?>" name="<?= h($k) ?>" value="<?= h($vals[$k] ?? '') ?>" maxlength="300"><?php endif; ?>
   <?php endforeach; ?>
   <h2>Social media</h2>

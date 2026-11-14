@@ -10,8 +10,8 @@
 require_once __DIR__ . '/db.php';
 
 const ROLE_PERMS = [
-    'super_admin' => ['posts', 'gallery', 'media', 'messages', 'staff', 'settings', 'audit'],
-    'admin'       => ['posts', 'gallery', 'media', 'messages', 'staff', 'settings', 'audit'],
+    'super_admin' => ['posts', 'gallery', 'media', 'messages', 'staff', 'settings', 'audit', 'donations'],
+    'admin'       => ['posts', 'gallery', 'media', 'messages', 'staff', 'settings', 'audit', 'donations'],
     'editor'      => ['posts', 'gallery', 'media', 'messages'],
 ];
 const LOGIN_MAX_FAILS_PER_ACCOUNT = 5;      // then the account is locked for LOGIN_LOCK_MINUTES

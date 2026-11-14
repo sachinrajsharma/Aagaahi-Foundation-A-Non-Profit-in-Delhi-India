@@ -1,0 +1,33 @@
+.fpage{padding:3rem 0 4rem}
+.fcard{max-width:720px;margin:0 auto;background:#fff;border-radius:28px;padding:2.2rem;box-shadow:0 10px 40px rgba(20,83,45,.08)}
+.fcard h1{color:var(--g1);margin:0 0 .4rem;font-family:Fraunces,serif}
+.fcard .lead{color:#4b5f52;margin:0 0 1.4rem}
+.fform{display:grid;gap:1rem}
+.fform label{display:grid;gap:.3rem;font-weight:700;color:var(--g1);font-size:.95rem}
+.fform label small{font-weight:400;color:#5d7064}
+.fform input[type=text],.fform input[type=email],.fform input[type=tel],.fform input[type=number],.fform select,.fform textarea{padding:.85rem 1.1rem;border:2px solid #cdeedb;border-radius:16px;background:#fff;font:inherit;width:100%;box-sizing:border-box}
+.fform input:focus,.fform select:focus,.fform textarea:focus{outline:none;border-color:var(--g2)}
+.fform .row2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.fform fieldset{border:2px solid #cdeedb;border-radius:16px;padding:.8rem 1rem;margin:0}
+.fform legend{font-weight:700;color:var(--g1);padding:0 .4rem}
+.fform .checks{display:grid;grid-template-columns:1fr 1fr;gap:.3rem .8rem}
+.fform .checks label,.fform .consent{display:flex;gap:.55rem;align-items:flex-start;font-weight:400;color:var(--ink)}
+.fform .checks input,.fform .consent input{margin-top:.25rem;accent-color:var(--g1)}
+.fform .go{background:var(--g1);color:#fff;border:0;border-radius:99px;padding:1rem;font:inherit;font-weight:800;cursor:pointer;transition:.2s}
+.fform .go:hover{background:var(--g2)}
+.fnote{font-size:.85rem;color:#5d7064;margin:.2rem 0 0}
+.fok,.ferr{border-radius:16px;padding:1rem 1.2rem;margin:0 0 1.2rem}
+.fok{background:#ecfdf3;border:2px solid #86efac;color:#14532d}
+.ferr{background:#fef2f2;border:2px solid #fca5a5;color:#991b1b}
+.amounts{display:flex;flex-wrap:wrap;gap:.6rem}
+.amounts input{position:absolute;opacity:0}
+.amounts span{display:inline-block;padding:.6rem 1.2rem;border:2px solid #cdeedb;border-radius:99px;font-weight:800;color:var(--g1);cursor:pointer}
+.amounts input:checked+span{background:var(--g1);color:#fff;border-color:var(--g1)}
+.amounts input:focus-visible+span{outline:3px solid var(--g2)}
+.paybox{background:#f6fbf7;border-radius:16px;padding:1rem 1.2rem;margin:.4rem 0;white-space:pre-line}
+.nl-box{max-width:420px;margin:0 auto 1rem}
+.nl-box label{display:block;color:#fff;margin-bottom:.4rem}.nl-box label span{opacity:.8;font-size:.85rem}
+.nl-box div{display:flex;gap:.4rem}.nl-box input{flex:1;padding:.6rem 1rem;border:0;border-radius:99px}
+.nl-box button{background:#22c55e;color:#fff;border:0;border-radius:99px;padding:.6rem 1.2rem;font-weight:800;cursor:pointer}
+@media(max-width:640px){.fform .row2,.fform .checks{grid-template-columns:1fr}.fcard{padding:1.4rem;border-radius:20px}}
+@media print{nav,footer,.noprint{display:none!important}.fcard{box-shadow:none}}

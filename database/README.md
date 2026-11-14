@@ -1,7 +1,7 @@
 # Database for aagaahifoundation.com (MySQL on Hostinger)
 
 The website works without a database. With one, contact-form messages are saved safely, and the blog, gallery,
-settings and staff accounts have a home. The schema is `migrations/001_initial.sql` (15 tables).
+settings and staff accounts have a home. The schema is `migrations/001_initial.sql` and `002_forms.sql` (16 tables).
 
 ## What is stored
 
@@ -31,7 +31,7 @@ when you no longer need them.
    enter the name, email and a strong password for the first administrator, keep *Add the starting content* ticked, and press *Install*.
 5. **Delete the `install/` folder** (hPanel > *File Manager*) as soon as it says *Finished*, and remove the
    `install_token` line from `config.local.php`.
-6. **Check it worked.** In phpMyAdmin you should see 15 tables, 4 posts, 7 events and 52 event photos. Send a test
+6. **Check it worked.** In phpMyAdmin you should see 16 tables, 4 posts, 7 events and 52 event photos. Send a test
    message through the contact form on the website: it appears in `contact_messages`.
 
 If a check is red: *PDO MySQL driver missing* means enabling it in hPanel > *PHP Configuration* > *Extensions*;
@@ -74,8 +74,33 @@ Roles: **editor** (posts, gallery, images, messages), **admin** (also staff, set
 
 **Server requirements (Hostinger has them by default):** PHP 8.0 or newer with the `pdo_mysql`, `gd` (with WebP), `fileinfo` and `mbstring` extensions, and the `uploads/` folder must be writable (permission 755).
 
+## Volunteer, newsletter and donation forms
+
+Public pages (PHP, need the database): **/volunteer/**, **/newsletter/** and **/donate/**. Links are on the home page, the navigation bar and the footer.
+Run `/install/` (new sites) or `php database/migrate.php` (existing ones) so `migrations/002_forms.sql` is applied: it adds one table (`form_attempts`, spam limits) and the donation settings.
+
+| Form | What happens | Dashboard page (who) |
+|---|---|---|
+| **Volunteer** | Name, email, optional phone and city, interests, free time, note. Adults only (18+ tick), consent tick, thank-you email to the volunteer, notice to the office | **Volunteers** (editor and up): status new / contacted / active / declined, notes, CSV, delete |
+| **Newsletter** | Double opt-in: a confirmation email, then a button (so mail scanners cannot confirm by themselves). A welcome email carries the one-click unsubscribe link. The page answers the same whether or not the address was already known | **Newsletter** (editor and up): counts, the confirmed-only list as CSV with each person's unsubscribe link |
+| **Donate** | Amount (presets or your own, Rs 50 to Rs 5,00,000), purpose, name, email, optional phone, optional "tell me about 80G", consent | **Donations** (admin and up): list, filters by status and financial year, mark received / failed / refunded, record offline gifts (cash, cheque, transfer), email the receipt again, CSV |
+
+**Donations, two modes (automatic):**
+- *Manual (default).* Put your UPI id and bank details in **Settings**. Donors see them with a reference (`DON-12`); you mark the gift *received* in the dashboard, which issues the receipt and emails it.
+- *Online (Razorpay).* Add your keys to `includes/config.local.php` (below). Donors pay on Razorpay's secure window (UPI, cards, net banking); we never see payment details. A payment counts only after Razorpay's signature is verified, from the browser return and/or Razorpay's server-to-server webhook. Both are safe to repeat: one payment gives one receipt. Amount and currency must match the order.
+
+Razorpay setup: create a Razorpay account (KYC is theirs), copy the **Key Id** and **Key Secret**, then in Razorpay > Webhooks add `https://aagaahifoundation.com/donate/webhook.php` with events `payment.captured`, `order.paid`, `payment.failed` and a secret you invent. Put all of it in `config.local.php` (see `config.local.example.php`). Use *test mode* keys first.
+
+Receipts are numbered per financial year (April to March), e.g. `AAG/2026-27/00001`; the prefix is in Settings. The receipt page is an acknowledgement, **not** an 80G certificate: 80G needs your registration details and the donor's PAN, which you handle outside the website (the site never asks for PAN, card numbers or ID documents).
+
+**Spam protection:** a hidden field bots fill in, a signed time token (forms sent in under 2 seconds or after 2 hours are ignored), and a limit per visitor per hour (3 volunteer sign-ups, 5 newsletter attempts, 10 donation starts). Visitors' IPs are kept only as a keyed hash.
+
+**Email:** sent with PHP `mail()` from `no-reply@<your domain>`, replies go to your office address. If messages land in spam, set up SPF/DKIM for the domain in hPanel > Emails. For local testing set `$ngo['mail_transport'] = 'file'` to write messages to `includes/mail.log` instead.
+
+**Privacy and law (India, DPDP Act):** only what is needed is collected, consent is recorded with its time, people can ask for deletion (delete the row in the dashboard), and volunteers must be adults. Have a lawyer or CA review the wording, your privacy notice, and your 80G / 12A / FCRA position before you publish.
+
 ## Testing
-Developed against MariaDB 11.4 and PHP 8.3 with three automated suites: the schema and seeding (54 checks), the installer (20) and the dashboard plus public site over real HTTP (115): sign-in security, roles, posts, drafts and scheduling, uploads (including malicious files), staff rules, settings and the public pages.
+Developed against MariaDB 11.4 and PHP 8.3 with four automated suites: the schema and seeding (54 checks), the installer (20), the dashboard plus public site over real HTTP (115), and the forms (103): spam protection, double opt-in, unsubscribe tampering, amount parsing, receipts and their numbering, Razorpay signature and webhook checks against a local stand-in server (wrong signature, wrong amount, replays), roles and CSV safety.
 
 ## Not built yet
-Volunteer sign-up, newsletter and donation forms (their tables exist and are empty), and the activity log's search and export.
+The activity log's search and export, sending newsletters from the dashboard (export the confirmed list and use your mail tool for now), and 80G certificates.

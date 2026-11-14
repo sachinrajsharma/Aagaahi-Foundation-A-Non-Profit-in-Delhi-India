@@ -17,6 +17,9 @@ function post_str(string $key, int $max = 255): string
     return mb_substr(trim((string)($_POST[$key] ?? '')), 0, $max);
 }
 
+/** Setting keys that may hold several lines. */
+const MULTILINE_SETTINGS = ['mission', 'bank_details'];
+
 function is_post(): bool { return $_SERVER['REQUEST_METHOD'] === 'POST'; }
 
 function fmt_dt(?string $dt): string
@@ -28,7 +31,8 @@ function fmt_dt(?string $dt): string
 
 function status_badge(string $status): string
 {
-    $cls = ['published' => 'ok', 'new' => 'warn', 'scheduled' => 'info', 'replied' => 'ok', 'read' => 'info', 'draft' => 'muted', 'spam' => 'bad', 'archived' => 'muted'][$status] ?? 'muted';
+    $cls = ['published' => 'ok', 'new' => 'warn', 'scheduled' => 'info', 'replied' => 'ok', 'read' => 'info', 'draft' => 'muted', 'spam' => 'bad', 'archived' => 'muted',
+        'paid' => 'ok', 'confirmed' => 'ok', 'active' => 'ok', 'contacted' => 'info', 'pending' => 'warn', 'created' => 'warn', 'failed' => 'bad', 'declined' => 'bad', 'unsubscribed' => 'muted', 'refunded' => 'muted'][$status] ?? 'muted';
     return '<span class="badge ' . $cls . '">' . h(ucfirst($status)) . '</span>';
 }
 
@@ -63,5 +67,7 @@ function setting_labels(): array
         'site_name' => 'Organisation name', 'short_name' => 'Short name', 'tagline' => 'Tagline (home page headline)', 'mission' => 'Mission (one or two sentences)',
         'email' => 'Public email address', 'notify_email' => 'Email that receives contact-form messages', 'phone' => 'Phone', 'address' => 'Address',
         'donate_url' => 'Donate link (UPI / payment page)', 'reg_note' => 'Registration note (footer)', 'hero_image' => 'Home page photo (path or https link)',
+        'upi_id' => 'UPI id for donations (shown when online payment is off)', 'bank_details' => 'Bank details for donations (account name, number, IFSC, bank)',
+        'receipt_prefix' => 'Receipt number prefix (e.g. AAG)', 'receipt_footer' => 'Line printed on donation receipts (e.g. registration number)', 'donation_note' => 'Note shown above the donation form',
     ];
 }

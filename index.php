@@ -4,12 +4,13 @@
 <head>
 <?php head('Home', 'family=Nunito:wght@400;600;800&family=Fraunces:wght@600;800'); ?>
 <link rel="stylesheet" href="assets/site.css">
+<link rel="stylesheet" href="assets/forms.css">
 </head>
 <body>
 <?php $areas = events_data(); $nProg = 0; $nPics = 0; foreach ($areas as $a) { $nProg += count($a["programs"]); foreach ($a["programs"] as $p) $nPics += count($p["images"]); } ?>
 <nav><div class="wrap"><a class="brand" href="#"><?= logo() ?> <?= e($ngo["name"]) ?></a>
   <?php $blogHref = blog_enabled() ? $ngo["blog"]["blog_url"] : "blog/"; ?>
-  <div><a class="m" href="#work">Our Work</a><a class="m" href="study/">Study</a><a class="m" href="<?= e($blogHref) ?>">Blog</a><a class="m" href="#contact">Contact</a> <span class="navauth"><a class="m auth" data-auth="in" href="study/#/login">Log in</a><a class="btn" data-auth="in" style="margin-left:1rem;padding:.6rem 1.3rem" href="study/#/join">Create account</a><a class="btn" data-auth="out" hidden style="margin-left:1rem;padding:.6rem 1.3rem" href="study/#/me">My progress</a></span></div></div></nav>
+  <div><a class="m" href="#work">Our Work</a><a class="m" href="study/">Study</a><a class="m" href="<?= e($blogHref) ?>">Blog</a><a class="m" href="volunteer/">Volunteer</a><a class="m" href="#contact">Contact</a> <span class="navauth"><a class="m auth" data-auth="in" href="study/#/login">Log in</a><a class="btn" data-auth="in" style="margin-left:1rem;padding:.6rem 1.3rem" href="study/#/join">Create account</a><a class="btn" data-auth="out" hidden style="margin-left:1rem;padding:.6rem 1.3rem" href="study/#/me">My progress</a></span><a class="btn" style="margin-left:1rem;padding:.6rem 1.3rem" href="donate/">Donate</a></div></div></nav>
 <div class="wrap powered-row"><div class="powered">Powered by <a href="https://vidaara.org" target="_blank" rel="noopener">vidaara.org</a></div></div>
 
 <header class="hero"><div class="wrap">
@@ -17,7 +18,7 @@
     <span class="tag">🌿 A non-profit in Delhi, India</span>
     <h1><?= e($ngo["tagline"]) ?></h1>
     <p><?= e($ngo["mission"]) ?></p>
-    <p style="margin-top:1.8rem"><a class="btn" href="#work">See our work</a> <a class="btn o" href="#contact">Get involved</a></p>
+    <p style="margin-top:1.8rem"><a class="btn" href="#work">See our work</a> <a class="btn o" href="volunteer/">Volunteer</a> <a class="btn o" href="donate/">Donate</a></p>
   </div>
   <div class="blobwrap reveal"><div class="blobimg<?= $ngo["hero_image"] ? " img" : "" ?>" <?= $ngo["hero_image"] ? "style=\"background-image:url(" . e($ngo["hero_image"]) . ")\"" : "" ?>><span><?= e($ngo["logo"]) ?></span></div>
     <span class="leaf l1">🍃</span><span class="leaf l2">🌼</span></div>
@@ -44,7 +45,8 @@
   <div><h2>Come grow with us</h2><p>Volunteer, partner with us, or bring your skills.</p><p><?php if ($ngo["email"]) echo "📧 " . e($ngo["email"]) . "<br>"; if ($ngo["phone"]) echo "📞 " . e($ngo["phone"]) . "<br>"; ?>📍 <?= e($ngo["address"]) ?></p></div>
   <?= contact_form() ?>
 </div></section>
-<footer>© <?= date("Y") ?> <?= e($ngo["name"]) ?> · <?= e($ngo["reg_note"]) ?><?php if (!empty($ngo['donate_url']) && $ngo['donate_url'] !== '#contact'): ?> · <a href="<?= e($ngo['donate_url']) ?>" rel="noopener">Donate</a><?php endif; ?></footer>
+<?php require_once __DIR__ . '/includes/page.php'; ?>
+<footer><?= newsletter_box() ?>© <?= date("Y") ?> <?= e($ngo["name"]) ?> · <?= e($ngo["reg_note"]) ?><?php if (!empty($ngo['donate_url']) && $ngo['donate_url'] !== '#contact'): ?> · <a href="<?= e($ngo['donate_url']) ?>" rel="noopener">Donate</a><?php endif; ?></footer>
 <script src="assets/common.js"></script>
 <script src="assets/nav.js"></script>
 <script src="assets/gallery.js"></script>

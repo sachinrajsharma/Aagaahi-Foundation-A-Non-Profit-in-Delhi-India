@@ -2,7 +2,7 @@
 /** admin/layout.php — page frame. Expects $me, $page, $content. */
 $flash = take_flash();
 $nav = [
-    ['home', 'Dashboard', null], ['messages', 'Messages', 'messages'], ['posts', 'Blog posts', 'posts'], ['gallery', 'Gallery', 'gallery'],
+    ['home', 'Dashboard', null], ['messages', 'Messages', 'messages'], ['volunteers', 'Volunteers', 'messages'], ['subscribers', 'Newsletter', 'messages'], ['donations', 'Donations', 'donations'], ['posts', 'Blog posts', 'posts'], ['gallery', 'Gallery', 'gallery'],
     ['media', 'Images', 'media'], ['staff', 'Staff & access', 'staff'], ['settings', 'Settings', 'settings'], ['audit', 'Activity log', 'audit'],
 ];
 $unread = 0;

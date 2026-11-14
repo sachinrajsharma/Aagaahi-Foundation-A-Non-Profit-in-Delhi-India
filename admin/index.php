@@ -19,7 +19,7 @@ header('Cache-Control: no-store');
 // page => permission needed (null = any signed-in staff member)
 const ADMIN_PAGES = [
     'home' => null, 'account' => null, 'login' => '-', 'logout' => '-',
-    'messages' => 'messages', 'posts' => 'posts', 'post' => 'posts', 'gallery' => 'gallery', 'event' => 'gallery',
+    'messages' => 'messages', 'volunteers' => 'messages', 'subscribers' => 'messages', 'donations' => 'donations', 'posts' => 'posts', 'post' => 'posts', 'gallery' => 'gallery', 'event' => 'gallery',
     'media' => 'media', 'staff' => 'staff', 'settings' => 'settings', 'audit' => 'audit',
 ];
 $page = preg_replace('/[^a-z_]/', '', (string)($_GET['p'] ?? 'home'));

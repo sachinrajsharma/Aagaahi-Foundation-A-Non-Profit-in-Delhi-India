@@ -1,5 +1,7 @@
 # Aagahi Foundation: A Non-Profit in Delhi, India
 
+> **New:** volunteer sign-up (`/volunteer/`), double opt-in newsletter (`/newsletter/`) and donations (`/donate/`, manual or Razorpay) with dashboard pages. See `database/README.md`.
+
 Website for **Aagahi Foundation** (founded by Akanksha Bhatia), built on the "Nature Green" template from
 [Empowering NGOs Through Technology](https://github.com/sachinrajsharma/Empowering-NGOs-Through-Technology).
 Plain PHP 8+, no database, no framework.
@@ -66,7 +68,7 @@ Every page has **Our Work · Study · Blog · Contact · Log in · Create accoun
 Posts live in `includes/posts/<slug>.html`: a small settings block at the top (title, slug, date, category, focus keyphrase, meta title and description, cover image, FAQs) followed by the article HTML. Run `node tools/build-static.js` to rebuild the Blog, post pages (with SEO markup: canonical, Open Graph, structured data), `sitemap.xml` and `robots.txt`. Use `{{SITE}}` in links and images; it becomes the address in `site_url` (`includes/config.php`). Once the dashboard is running, import the posts with `node blog-engine/scripts/import-posts.js aagahi <this folder>` and edit them there.
 
 ### Database (MySQL, Hostinger)
-`database/` holds the schema (15 tables: staff, settings, blog, gallery, messages, volunteers, newsletter, donations, audit log), a migration runner, a seeder and `install/`, a one-time web installer. Contact-form messages are saved to the database when it is configured. Setup steps for aagaahifoundation.com are in `database/README.md`; private settings go in `includes/config.local.php` (copy `includes/config.local.example.php`).
+`database/` holds the schema (16 tables: staff, settings, blog, gallery, messages, volunteers, newsletter, donations, audit log), a migration runner, a seeder and `install/`, a one-time web installer. Contact-form messages are saved to the database when it is configured. Setup steps for aagaahifoundation.com are in `database/README.md`; private settings go in `includes/config.local.php` (copy `includes/config.local.example.php`).
 
 ### Staff dashboard (PHP, /admin/)
 After the database is installed, staff sign in at `/admin/` to manage messages, blog posts (with a live SEO check), the gallery, images, staff accounts and site settings. See `database/README.md`.
