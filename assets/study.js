@@ -58,7 +58,7 @@
     var u = me();
     return '<div class="st-bar">' + (token() && u
       ? '<span>Hi, <b>' + esc((u.name || '').split(' ')[0]) + '</b></span><a href="#/me">My progress</a><a href="#" data-logout>Sign out</a>'
-      : '<span>Save your progress:</span><a href="#/login">Sign in</a><a href="#/join">Join with class code</a>') + '</div>';
+      : '<span>Save your progress:</span><a href="#/login">Sign in</a><a href="#/join">Create free account</a>') + '</div>';
   }
   function show(html) { root.innerHTML = bar() + html; math(root); window.scrollTo({ top: root.getBoundingClientRect().top + window.scrollY - 90, behavior: 'smooth' }); }
   root.addEventListener('click', function (e) {
