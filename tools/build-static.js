@@ -42,6 +42,7 @@ const html = `<!DOCTYPE html>
 <link rel="stylesheet" href="assets/site.css">
 </head>
 <body>
+<div class="powered">Powered by <a href="https://vidaara.org" target="_blank" rel="noopener">vidaara.org</a></div>
 <nav><div class="wrap"><a class="brand" href="#"><span class="logo-emoji">${esc(ngo.logo)}</span> ${esc(ngo.name)}</a>
   <div><a class="m" href="#work">Our Work</a>${engineUrl ? `<a class="m" href="${esc(blogPath)}">Blog</a>` : ''}<a class="m" href="#contact">Contact</a> <a class="btn" style="margin-left:1.2rem;padding:.6rem 1.3rem" href="${esc(ngo.donate_url)}">Support us</a></div></div></nav>
 

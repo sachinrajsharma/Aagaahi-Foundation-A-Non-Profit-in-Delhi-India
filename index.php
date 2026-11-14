@@ -7,6 +7,7 @@
 </head>
 <body>
 <?php $areas = events_data(); $nProg = 0; $nPics = 0; foreach ($areas as $a) { $nProg += count($a["programs"]); foreach ($a["programs"] as $p) $nPics += count($p["images"]); } ?>
+<div class="powered">Powered by <a href="https://vidaara.org" target="_blank" rel="noopener">vidaara.org</a></div>
 <nav><div class="wrap"><a class="brand" href="#"><?= logo() ?> <?= e($ngo["name"]) ?></a>
   <div><a class="m" href="#work">Our Work</a><?php if (blog_enabled()) : ?><a class="m" href="<?= e($ngo["blog"]["blog_url"]) ?>">Blog</a><?php endif; ?><a class="m" href="#contact">Contact</a> <a class="btn" style="margin-left:1.2rem;padding:.6rem 1.3rem" href="<?= e($ngo["donate_url"]) ?>">Support us</a></div></div></nav>
 
