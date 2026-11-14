@@ -1,6 +1,7 @@
 <?php
 /** Blog integration: talks to the BlogForge engine (blog-engine/). Everything is a no-op until engine_url is set. */
 require_once __DIR__ . '/../blog-engine/clients/php/src/BlogForge.php';
+require_once __DIR__ . '/content.php';
 
 function blog_enabled(): bool
 {
@@ -43,33 +44,24 @@ function blog_tracker(string $pageType = '', string $slug = ''): string
         . ($pageType ? ' data-page-type="' . e($pageType) . '"' : '') . ($slug !== '' ? ' data-slug="' . e($slug) . '"' : '') . ' defer></script>';
 }
 
-/** One blog card (engine posts have cover_image, local posts have cover_rel). */
+/** One blog card for a normalised post (see includes/content.php). */
 function blog_card(array $p, string $href): string
 {
-    $img = $p['cover_image'] ?? ($p['cover_rel'] ?? '');
+    $img = $p['cover'] ?? ($p['cover_image'] ?? '');
     $cat = $p['category'] ?? '';
-    $date = !empty($p['date']) ? date('j F Y', strtotime($p['date'])) : (!empty($p['published_at']) ? date('j F Y', strtotime($p['published_at'])) : '');
+    $date = !empty($p['date']) ? date('j F Y', strtotime($p['date'])) : '';
+    $min = !empty($p['minutes']) ? ' · ' . (int)$p['minutes'] . ' min read' : '';
     return '<a class="post-card" href="' . e($href) . '">' . ($img ? '<img src="' . e($img) . '" alt="' . e($p['cover_alt'] ?? '') . '" loading="lazy">' : '')
         . '<div class="pc-body">' . ($cat ? '<span class="post-cat">' . e($cat) . '</span>' : '') . '<h3>' . e($p['title']) . '</h3><p>' . e($p['excerpt'] ?? '') . '</p>'
-        . ($date ? '<small>' . e($date) . '</small>' : '') . '</div></a>';
+        . ($date ? '<small>' . e($date) . $min . '</small>' : '') . '</div></a>';
 }
 
+/** The "From our blog" block on the home page: the latest posts from the database (or the repo files). */
 function blog_latest_html(): string
 {
-    $posts = blog_latest(4);
-    if (!$posts) $posts = array_slice(local_posts(), 0, 4);   // engine not connected: use the posts kept in this repo
+    $posts = content_posts(4);
     if (!$posts) return '';
     $o = '<section id="blog"><div class="wrap"><h2 class="reveal">From our blog</h2><p>Practical guides from our programmes: money and online safety, hygiene, road safety and workplace rights.</p><div class="post-grid">';
-    foreach ($posts as $p) $o .= blog_card($p, '/blog/' . $p['slug']);
-    return $o . '</div><p style="margin-top:1.5rem"><a class="btn o" href="/blog">All posts</a></p></div></section>';
-}
-
-/** Posts kept in includes/posts.json (used when the BlogForge engine is not connected). Newest first. */
-function local_posts(): array
-{
-    $f = __DIR__ . '/posts.json';
-    $d = is_file($f) ? json_decode(file_get_contents($f), true) : null;
-    $posts = is_array($d) && isset($d['posts']) && is_array($d['posts']) ? $d['posts'] : [];
-    usort($posts, function ($a, $b) { return strcmp($b['date'] ?? '', $a['date'] ?? ''); });
-    return $posts;
+    foreach ($posts as $p) $o .= blog_card($p, '/blog/' . $p['slug'] . '/');
+    return $o . '</div><p style="margin-top:1.5rem"><a class="btn o" href="/blog/">All posts</a></p></div></section>';
 }

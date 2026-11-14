@@ -11,6 +11,7 @@
  * You can also use the environment variables AAGAHI_DB_HOST, AAGAHI_DB_NAME, AAGAHI_DB_USER, AAGAHI_DB_PASS.
  */
 require_once __DIR__ . '/config.php';
+date_default_timezone_set('Asia/Kolkata');
 
 function db_config(): array
 {
@@ -110,4 +111,24 @@ function audit(?int $staffId, string $action, ?string $entity = null, $entityId 
         $pdo->prepare('INSERT INTO audit_log (staff_id, action, entity, entity_id, detail, ip_hash) VALUES (?,?,?,?,?,?)')
             ->execute([$staffId, $action, $entity, $entityId === null ? null : (string)$entityId, $detail === null ? null : mb_substr($detail, 0, 500), ip_hash()]);
     } catch (Throwable $e) { error_log('[aagahi] audit failed: ' . $e->getMessage()); }
+}
+
+/**
+ * Lets the dashboard's Settings page override the details in config.php (name, tagline, contact details, ...).
+ * Values left empty in the dashboard keep the config.php default. site_url is never taken from the database.
+ */
+function apply_db_settings(): void
+{
+    global $ngo;
+    static $done = false;
+    if ($done) return;
+    $done = true;
+    if (!db_enabled()) return;
+    foreach (['site_name' => 'name', 'short_name' => 'short', 'tagline' => 'tagline', 'mission' => 'mission', 'email' => 'email', 'phone' => 'phone',
+              'address' => 'address', 'donate_url' => 'donate_url', 'reg_note' => 'reg_note', 'hero_image' => 'hero_image'] as $key => $target) {
+        $v = setting($key);
+        if ($v !== null && $v !== '') $ngo[$target] = $v;
+    }
+    $social = json_decode((string)setting('social', ''), true);
+    if (is_array($social) && $social) $ngo['social'] = $social;
 }

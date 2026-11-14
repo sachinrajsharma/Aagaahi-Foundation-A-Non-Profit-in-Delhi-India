@@ -61,7 +61,7 @@ $ngo['site_url'] = 'https://sachinrajsharma.github.io/Aagaahi-Foundation-A-Non-P
  *   $ngo['db'] = ['host' => 'localhost', 'name' => 'u123456789_aagahi', 'user' => 'u123456789_aagahi', 'pass' => '...'];
  *   $ngo['install_token'] = 'a long phrase you invent';   // only needed while you run install/
  */
-$ngo['db'] = ['host' => 'localhost', 'name' => '', 'user' => '', 'pass' => ''];
+$ngo['db'] = ['host' => '', 'name' => '', 'user' => '', 'pass' => ''];   // host: leave empty for "localhost"
 $ngo['install_token'] = '';
 
 // Private overrides (passwords, keys, the real domain). Loaded last on purpose so it wins over everything above.

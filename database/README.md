@@ -51,6 +51,31 @@ first administrator from a terminal, if your plan has SSH: `php database/create-
 - Tested against MariaDB 11.4 with PHP 8.3: schema, idempotent migrations, seeding, constraints and cascades,
   unicode, the contact handler (validation, spam limit, header-injection) and the installer (54 + 20 checks).
 
-## What comes next
-The database is ready; these still read from files and are the next pieces of work: the dashboard (login, posts,
-gallery, messages inbox), the home page and blog reading from the database, and the volunteer, newsletter and donation forms.
+## The dashboard (https://aagaahifoundation.com/admin/)
+
+Sign in with the administrator you created in the installer. Everything below works from a phone or a laptop.
+
+| Page | What you can do | Who |
+|---|---|---|
+| **Dashboard** | Numbers at a glance, latest messages and posts | everyone |
+| **Messages** | Contact-form inbox: read, mark replied / spam / archived, add private notes, reply by email, download a CSV, delete | editor and up |
+| **Blog posts** | Write and edit posts in a visual editor (headings, bold, lists, links, tables, images), add FAQs, set the search-engine title and description, schedule a post, preview a draft, delete. A live **SEO check** scores the post and tells you what to improve | editor and up |
+| **Gallery** | Add events under a focus area, upload up to 30 photos at once, describe and reorder them, hide or delete an event | editor and up |
+| **Images** | Upload and delete pictures for posts and cover images | editor and up |
+| **Staff & access** | Add team members, change roles, reset passwords, disable or delete accounts. New accounts must choose their own password at first sign-in | admin and up |
+| **Settings** | Name, tagline, mission, contact details, donate link, social links: the website changes at once | admin and up |
+| **Activity log** | Who did what, newest first | admin and up |
+
+Roles: **editor** (posts, gallery, images, messages), **admin** (also staff, settings, activity log), **super admin** (everything, including other super admins; there must always be one).
+
+**What the website now reads from the database:** the blog (list, each post with search-engine markup, `sitemap.xml`), the "Our work, in pictures" gallery, the "From our blog" block, and the Settings (tagline, contact details, donate link in the footer). If the database is ever unreachable the site falls back to the files in the repository, so it never goes blank.
+
+**Safety built in:** sign-in locks for 15 minutes after 5 wrong passwords (and slows one visitor after 10), sessions end after 2 hours idle, every form has a security token, a disabled account loses access on its next click, uploaded images are re-encoded (location data removed, hidden code impossible) and the uploads folder can never run code, and anything typed in the editor is cleaned of scripts.
+
+**Server requirements (Hostinger has them by default):** PHP 8.0 or newer with the `pdo_mysql`, `gd` (with WebP), `fileinfo` and `mbstring` extensions, and the `uploads/` folder must be writable (permission 755).
+
+## Testing
+Developed against MariaDB 11.4 and PHP 8.3 with three automated suites: the schema and seeding (54 checks), the installer (20) and the dashboard plus public site over real HTTP (115): sign-in security, roles, posts, drafts and scheduling, uploads (including malicious files), staff rules, settings and the public pages.
+
+## Not built yet
+Volunteer sign-up, newsletter and donation forms (their tables exist and are empty), and the activity log's search and export.

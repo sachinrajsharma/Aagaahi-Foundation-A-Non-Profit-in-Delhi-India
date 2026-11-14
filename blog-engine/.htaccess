@@ -1,0 +1,2 @@
+# The blog engine folder is source code for a separate Node app: nothing in it should be opened from a browser
+Require all denied

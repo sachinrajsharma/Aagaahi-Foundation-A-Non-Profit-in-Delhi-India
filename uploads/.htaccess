@@ -1,0 +1,5 @@
+# Uploaded files are images only. Never run anything from here.
+Options -Indexes -ExecCGI
+<FilesMatch "\.(php|phtml|phar|php[0-9]|pl|py|cgi|sh|html?|js)$">
+  Require all denied
+</FilesMatch>

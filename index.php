@@ -44,7 +44,7 @@
   <div><h2>Come grow with us</h2><p>Volunteer, partner with us, or bring your skills.</p><p><?php if ($ngo["email"]) echo "📧 " . e($ngo["email"]) . "<br>"; if ($ngo["phone"]) echo "📞 " . e($ngo["phone"]) . "<br>"; ?>📍 <?= e($ngo["address"]) ?></p></div>
   <?= contact_form() ?>
 </div></section>
-<footer>© <?= date("Y") ?> <?= e($ngo["name"]) ?> · <?= e($ngo["reg_note"]) ?></footer>
+<footer>© <?= date("Y") ?> <?= e($ngo["name"]) ?> · <?= e($ngo["reg_note"]) ?><?php if (!empty($ngo['donate_url']) && $ngo['donate_url'] !== '#contact'): ?> · <a href="<?= e($ngo['donate_url']) ?>" rel="noopener">Donate</a><?php endif; ?></footer>
 <script src="assets/common.js"></script>
 <script src="assets/nav.js"></script>
 <script src="assets/gallery.js"></script>

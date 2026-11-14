@@ -67,3 +67,6 @@ Posts live in `includes/posts/<slug>.html`: a small settings block at the top (t
 
 ### Database (MySQL, Hostinger)
 `database/` holds the schema (15 tables: staff, settings, blog, gallery, messages, volunteers, newsletter, donations, audit log), a migration runner, a seeder and `install/`, a one-time web installer. Contact-form messages are saved to the database when it is configured. Setup steps for aagaahifoundation.com are in `database/README.md`; private settings go in `includes/config.local.php` (copy `includes/config.local.example.php`).
+
+### Staff dashboard (PHP, /admin/)
+After the database is installed, staff sign in at `/admin/` to manage messages, blog posts (with a live SEO check), the gallery, images, staff accounts and site settings. See `database/README.md`.

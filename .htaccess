@@ -2,3 +2,5 @@
 RewriteEngine On
 RewriteRule ^blog/?$ blog/index.php [L]
 RewriteRule ^blog/([^/]+)/?$ blog/index.php?slug=$1 [L,QSA]
+RewriteRule ^sitemap\.xml$ sitemap.php [L]
+RewriteRule ^robots\.txt$ robots.php [L]

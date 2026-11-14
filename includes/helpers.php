@@ -1,5 +1,7 @@
 <?php
 require_once __DIR__ . '/config.php';
+require_once __DIR__ . '/db.php';
+apply_db_settings();
 
 /** Escape output safely. */
 function e($v): string
@@ -46,13 +48,13 @@ function contact_form(string $class = 'cform'): string
 }
 
 /** Shared <head> bits. $fonts is a Google Fonts "family=" query fragment. */
-function head(string $title, string $fonts, string $prefix = ""): void
+function head(string $title, string $fonts, string $prefix = "", string $desc = ""): void
 {
     global $ngo; ?>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title><?= e($ngo['name']) ?> — <?= e($title) ?></title>
-<meta name="description" content="<?= e($ngo['mission']) ?>">
+<meta name="description" content="<?= e($desc !== "" ? $desc : $ngo['mission']) ?>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?<?= $fonts ?>&display=swap" rel="stylesheet">
