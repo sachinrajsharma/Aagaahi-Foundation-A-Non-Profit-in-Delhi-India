@@ -131,3 +131,25 @@ footer{background:var(--g1);color:#d1fae5;text-align:center;padding:2rem 0;margi
 [hidden]{display:none!important}
 .navauth{display:inline-flex;align-items:center;margin-left:.8rem}
 @media(max-width:800px){nav .wrap{flex-wrap:wrap;gap:.4rem .8rem;justify-content:center}nav .wrap>div:last-child{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:.3rem .9rem}nav a.m{display:inline-block;margin-left:0;font-size:.92rem}.navauth{margin-left:0}.powered-row{justify-content:center;margin-top:0}}
+
+/* ---- blog: cards and articles ---- */
+.post-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1.4rem;margin-top:1.4rem}
+.post-card{display:flex;flex-direction:column;background:#fff;border-radius:22px;overflow:hidden;box-shadow:0 8px 28px #14532d14;transition:.25s}
+.post-card:hover{transform:translateY(-5px)}
+.post-card img{width:100%;aspect-ratio:16/10;object-fit:cover;display:block;background:#dcfce7}
+.pc-body{padding:1.1rem 1.2rem 1.3rem;display:flex;flex-direction:column;gap:.35rem}
+.pc-body h3{margin:0;color:var(--g1);font-size:1.15rem;line-height:1.3}.pc-body p{margin:0;color:#4b5f52;font-size:.95rem}.pc-body small{color:#64748b}
+.post-cat{display:inline-block;align-self:flex-start;background:#dcfce7;color:var(--g1);font:800 .72rem 'Nunito',sans-serif;letter-spacing:.05em;text-transform:uppercase;padding:.2rem .65rem;border-radius:99px}
+.article h1{font-size:clamp(1.9rem,4.5vw,2.7rem);line-height:1.15;color:var(--g1);margin:.6rem 0}
+.post-meta{color:#64748b;font-size:.9rem;margin:0 0 1.2rem}
+.post-cover{margin:0 0 1.5rem}.post-cover img{width:100%;border-radius:22px;display:block}
+.article{font-size:1.08rem;line-height:1.8}
+.article h2{font-size:1.6rem;color:var(--g1);margin:2.2rem 0 .6rem;line-height:1.25}
+.article h3{font-size:1.2rem;color:var(--g1);margin:1.6rem 0 .4rem}
+.article p,.article li{margin:.6rem 0}.article ul,.article ol{padding-left:1.4rem}
+.article a{color:#166534;font-weight:700;text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:3px}
+.article figure{margin:1.6rem 0}.article figure img{width:100%;border-radius:18px;display:block}
+.article figcaption{font-size:.88rem;color:#64748b;margin-top:.4rem;text-align:center}
+.article table{width:100%;border-collapse:collapse;margin:1.4rem 0;font-size:.98rem;display:block;overflow-x:auto}
+.article th,.article td{border:1px solid #d1e7d9;padding:.6rem .8rem;text-align:left;vertical-align:top}.article th{background:#ecfdf3;color:var(--g1)}
+.article img{max-width:100%;height:auto}
