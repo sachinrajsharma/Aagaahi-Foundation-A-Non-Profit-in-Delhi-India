@@ -3,11 +3,12 @@
 //   #/                      grade picker          #/g/8/math                 chapters
 //   #/g/8                   subject picker        #/g/8/math/<chapter>       lesson
 //                                                 #/g/8/math/<chapter>/test  chapter test
-//   #/login  #/join (needs the coordinator's class code)  #/me (my progress, delete account)
+//   #/login  #/join (open sign-up with captcha, like vidaara.org)  #/me (my progress, delete account)
 (function () {
   var root = document.getElementById('study');
   if (!root) return;
   var API = (root.getAttribute('data-api') || 'https://vidaara.org/api/v1').replace(/\/+$/, '');
+  var PARTNER_CODE = (root.getAttribute('data-partner-code') || '').trim(); // this NGO's public class code (optional)
   var cache = {};
   var PROG_KEY = 'aagahi-study-progress-v1';
   var TOK_KEY = 'aagahi-study-token-v1', USER_KEY = 'aagahi-study-user-v1';
@@ -241,36 +242,70 @@
   function msg(el, text, bad) { if (!el) return; el.className = 'st-note' + (bad ? ' bad' : ''); el.textContent = text; }
   function field(id, label, type, extra) { return '<label for="' + id + '">' + label + '</label><input id="' + id + '" name="' + id + '" type="' + (type || 'text') + '" ' + (extra || '') + ' required>'; }
 
+  function authCard(title, sub, inner) {
+    return '<div class="auth-wrap"><div class="auth-card"><div class="auth-logo"><span class="logo-emoji">🌱</span> Aagahi</div>' +
+      '<div class="auth-tagline">Free education for every student</div><div class="auth-h">' + title + '</div><div class="auth-sub">' + sub + '</div>' + inner + '</div></div>';
+  }
+  function captchaRow() {
+    return '<div class="form-group"><label class="form-label" for="captcha">Security check</label><div class="captcha-row"><div class="captcha-img" id="captchaImg">Loading…</div>' +
+      '<button type="button" class="captcha-refresh" id="captchaRefresh" aria-label="Get a new security image" title="New image">↻</button></div>' +
+      '<input class="form-input" type="text" id="captcha" name="captcha" placeholder="Type the characters above" required autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false"></div>';
+  }
+  var captchaId = '';
+  function loadCaptcha() {
+    var img = document.getElementById('captchaImg'); if (!img) return;
+    img.textContent = 'Loading…'; captchaId = '';
+    papi('GET', '/captcha').then(function (r) {
+      if (!r.ok) { img.textContent = 'Could not load. Tap ↻'; return; }
+      captchaId = r.data.id; img.innerHTML = r.data.svg;
+    });
+  }
+  function bindCaptcha() {
+    loadCaptcha();
+    var rf = document.getElementById('captchaRefresh');
+    if (rf) rf.addEventListener('click', function () { var c = document.getElementById('captcha'); if (c) c.value = ''; loadCaptcha(); });
+  }
+  function ff(id, label, type, extra) { return '<div class="form-group"><label class="form-label" for="' + id + '">' + label + '</label><input class="form-input" id="' + id + '" name="' + id + '" type="' + (type || 'text') + '" ' + (extra || '') + ' required></div>'; }
+  function err(el, text) { if (!el) return; el.hidden = !text; el.textContent = text ? '⚠️ ' + text : ''; }
+
   function viewLogin() {
-    show(crumbs([{ t: 'Study', href: '#/' }, { t: 'Sign in' }]) + '<h2>Sign in</h2><p class="st-sub">Use the email and password you chose when you joined.</p>' +
-      '<form class="st-form" id="lf">' + field('email', 'Email', 'email', 'autocomplete="email"') + field('password', 'Password', 'password', 'autocomplete="current-password"') +
-      '<div id="lmsg" class="st-note"></div><button class="btn" type="submit">Sign in</button> <a class="btn o" href="#/join">I am new: join</a></form>');
+    show(authCard('Welcome back', 'Log in to see your progress.',
+      '<div id="amsg" class="auth-error" hidden></div><form id="lf">' + ff('email', 'Email address', 'email', 'placeholder="you@example.com" autocomplete="email"') +
+      ff('password', 'Password', 'password', 'autocomplete="current-password"') +
+      '<div class="forgot"><a href="https://vidaara.org/auth/forgot-password" target="_blank" rel="noopener">Forgot password?</a></div>' + captchaRow() +
+      '<button class="btn-auth" type="submit">Log in →</button></form>' +
+      '<div class="auth-divider">New here? <a class="auth-link" href="#/join">Create a free account →</a></div>'));
+    bindCaptcha();
     document.getElementById('lf').addEventListener('submit', function (e) {
       e.preventDefault();
-      var f = e.target, m = document.getElementById('lmsg'); msg(m, 'Signing in…');
-      papi('POST', '/login', { email: f.email.value, password: f.password.value }).then(function (r) {
-        if (!r.ok) return msg(m, r.error || 'Could not sign in.', true);
+      var f = e.target, m = document.getElementById('amsg'); err(m, '');
+      papi('POST', '/login', { email: f.email.value, password: f.password.value, captcha_id: captchaId, captcha: f.captcha.value }).then(function (r) {
+        if (!r.ok) { err(m, r.error || 'Could not log in.'); f.captcha.value = ''; loadCaptcha(); return; }
         setSession(r.data.token, r.data.user); location.hash = '#/me';
       });
     });
   }
 
   function viewJoin() {
-    show(crumbs([{ t: 'Study', href: '#/' }, { t: 'Join' }]) + '<h2>Join with your class code</h2>' +
-      '<div class="st-info"><b>How it works</b><ul><li>Your Aagahi coordinator gives you a <b>class code</b> after your parent or guardian has agreed. You cannot join without it.</li>' +
-      '<li>We save only your <b>name, email, class and learning progress</b>. We never show ads or sell anything.</li>' +
-      '<li>You can delete your account and all your data at any time from <i>My progress</i>.</li></ul></div>' +
-      '<form class="st-form" id="jf">' + field('name', 'Student name', 'text', 'maxlength="60" autocomplete="name"') + field('email', 'Email', 'email', 'autocomplete="email"') +
-      field('password', 'Choose a password (8 or more characters)', 'password', 'minlength="8" autocomplete="new-password"') +
-      '<label for="grade">Class</label><select id="grade" name="grade" required><option value="">Choose…</option>' + [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(function (n) { return '<option>' + n + '</option>'; }).join('') + '</select>' +
-      field('code', 'Class code from your coordinator', 'text', 'maxlength="12" autocapitalize="characters" style="text-transform:uppercase"') +
-      '<input type="text" name="website" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" aria-hidden="true">' +
-      '<div id="jmsg" class="st-note"></div><button class="btn" type="submit">Create my account</button> <a class="btn o" href="#/login">I already have an account</a></form>');
+    show(authCard('Create your free account', 'No credit card. No ads. Always free.',
+      '<div class="free-badge">🎓 Free Class 1 to 12 lessons, powered by Vidaara</div><div id="amsg" class="auth-error" hidden></div>' +
+      '<form id="jf">' + ff('name', 'Full name', 'text', 'maxlength="60" placeholder="Asha Kumari" autocomplete="name"') +
+      ff('email', 'Email address', 'email', 'placeholder="you@example.com" autocomplete="email"') +
+      ff('password', 'Password', 'password', 'minlength="8" placeholder="Min. 8 characters" autocomplete="new-password"') +
+      '<div class="form-group"><label class="form-label" for="grade">Your class</label><select class="form-input" id="grade" name="grade" required><option value="">Choose your class…</option>' +
+      [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(function (n) { return '<option value="' + n + '">Class ' + n + '</option>'; }).join('') + '</select></div>' +
+      (PARTNER_CODE ? '' : '<div class="form-group"><label class="form-label" for="code">Class code <span style="font-weight:400;color:#64748b">(optional)</span></label><input class="form-input" id="code" name="code" maxlength="12" placeholder="Only if your coordinator gave you one" autocomplete="off" autocapitalize="characters"></div>') +
+      '<input type="text" name="website" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" aria-hidden="true">' + captchaRow() +
+      '<p class="auth-fine">We save only your name, email, class and learning progress. No ads, nothing sold. You can delete your account any time from <i>My progress</i>.</p>' +
+      '<button class="btn-auth" type="submit">Create Free Account →</button></form>' +
+      '<div class="auth-divider">Already have an account? <a class="auth-link" href="#/login">Log in →</a></div>'));
+    bindCaptcha();
     document.getElementById('jf').addEventListener('submit', function (e) {
       e.preventDefault();
-      var f = e.target, m = document.getElementById('jmsg'); msg(m, 'Creating your account…');
-      papi('POST', '/register', { name: f.name.value, email: f.email.value, password: f.password.value, grade: f.grade.value, code: f.code.value, website: f.website.value }).then(function (r) {
-        if (!r.ok) return msg(m, r.error || 'Could not create the account.', true);
+      var f = e.target, m = document.getElementById('amsg'); err(m, '');
+      var code = PARTNER_CODE || (f.code ? f.code.value : '');
+      papi('POST', '/register', { name: f.name.value, email: f.email.value, password: f.password.value, grade: f.grade.value, code: code, website: f.website.value, captcha_id: captchaId, captcha: f.captcha.value }).then(function (r) {
+        if (!r.ok) { err(m, r.error || 'Could not create the account.'); f.captcha.value = ''; loadCaptcha(); return; }
         setSession(r.data.token, r.data.user); location.hash = '#/me';
       });
     });
