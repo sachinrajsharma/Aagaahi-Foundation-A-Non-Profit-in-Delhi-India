@@ -1,0 +1,4 @@
+# Never serve logs, locks or SQL from this folder
+<FilesMatch "\.(log|lock|sql|md)$">
+  Require all denied
+</FilesMatch>

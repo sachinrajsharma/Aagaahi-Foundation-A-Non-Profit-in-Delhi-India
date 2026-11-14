@@ -31,7 +31,6 @@ $ngo['blog'] = [
     'api_secret' => '',   // sk_... (only needed for webhooks)
     'blog_url'   => '/blog',
 ];
-if (is_file(__DIR__ . '/config.local.php')) require __DIR__ . '/config.local.php';
 
 /** Study section: free Class 1-12 lessons and tests, served by Vidaara's public content API. */
 $ngo['study'] = [
@@ -55,3 +54,15 @@ $ngo['cms'] = [
 /** Public address of this website (no trailing slash): canonical URLs, sitemap.xml and links inside blog posts use it.
  *  Change it when you move to your own domain, then run: node tools/build-static.js */
 $ngo['site_url'] = 'https://sachinrajsharma.github.io/Aagaahi-Foundation-A-Non-Profit-in-Delhi-India';
+
+/**
+ * Database (MySQL on Hostinger). Leave empty and the site runs without a database.
+ * Put the real values in includes/config.local.php (git-ignored), never here:
+ *   $ngo['db'] = ['host' => 'localhost', 'name' => 'u123456789_aagahi', 'user' => 'u123456789_aagahi', 'pass' => '...'];
+ *   $ngo['install_token'] = 'a long phrase you invent';   // only needed while you run install/
+ */
+$ngo['db'] = ['host' => 'localhost', 'name' => '', 'user' => '', 'pass' => ''];
+$ngo['install_token'] = '';
+
+// Private overrides (passwords, keys, the real domain). Loaded last on purpose so it wins over everything above.
+if (is_file(__DIR__ . '/config.local.php')) require __DIR__ . '/config.local.php';

@@ -35,6 +35,7 @@ function contact_form(string $class = 'cform'): string
     $html  = '<form class="' . e($class) . '" method="post" action="includes/contact.php" id="contact">';
     if ($sent === 1) $html .= '<p class="flash ok">Thank you! We will get back to you soon.</p>';
     if ($sent === 0) $html .= '<p class="flash err">Please fill all fields with a valid email.</p>';
+    if ($sent === 2) $html .= '<p class="flash err">You have sent several messages recently. Please wait a little before sending another.</p>';
     $html .= '<input type="hidden" name="back" value="' . $back . '">';
     $html .= '<input type="text" name="website" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" aria-hidden="true">';
     $html .= '<input type="text" name="name" placeholder="Your name" required>';
