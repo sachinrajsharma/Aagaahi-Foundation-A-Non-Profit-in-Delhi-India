@@ -61,3 +61,33 @@ footer{background:var(--g1);color:#d1fae5;text-align:center;padding:2rem 0;margi
 .powered{font:600 .68rem/1 'Nunito',sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#14532d80;padding:0 .2rem}
 .powered a{color:#14532d;font-weight:800;letter-spacing:.05em;text-transform:none;font-size:.76rem;margin-left:.3rem;border-bottom:1px dotted #22c55e;transition:.2s}
 .powered a:hover{color:#22c55e;border-bottom-style:solid}
+/* ---- Study (Class 1-12 lessons powered by Vidaara) ---- */
+.study-hero{padding:2rem 0 .5rem}.study-hero h1{font-size:clamp(2rem,4.5vw,3.2rem);color:var(--g1);margin:.3rem 0}
+.study-band{background:var(--g1);color:#fff;border-radius:40px;padding:3rem 2rem;text-align:center;margin:0 1rem}
+.study-band h2{color:#fff}.study-band p{max-width:56ch;margin:.5rem auto 1.5rem;color:#d1fae5}
+.study-band .btn{background:#86efac;color:var(--g1)}.study-band .btn:hover{background:#fff}
+#study{min-height:50vh;padding-bottom:3rem}
+.st-sub{color:#4b5f52;margin:.2rem 0 1.2rem}.st-group{margin:1.8rem 0 .7rem;color:var(--g1);font-size:1.15rem}
+.st-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.9rem}
+.st-card{background:#fff;border-radius:20px;padding:1.2rem 1rem;box-shadow:0 6px 22px #14532d12;border-bottom:4px solid var(--g2);display:flex;flex-direction:column;gap:.25rem;transition:.25s}
+.st-card:hover{transform:translateY(-4px)}.st-card b{color:var(--g1);font-size:1.05rem}.st-card small{color:#5d7064}.st-card .ic{font-size:1.8rem}
+.crumbs{font-size:.85rem;color:#5d7064;margin:0 0 1rem}.crumbs a{color:var(--g1);font-weight:700}.crumbs i{font-style:normal;margin:0 .15rem}
+.st-chapters{list-style:none;margin:0;padding:0;display:grid;gap:.6rem}
+.st-chapters a{display:flex;align-items:center;gap:.9rem;background:#fff;border-radius:16px;padding:.8rem 1rem;box-shadow:0 4px 16px #14532d10}
+.st-chapters a:hover{background:#f0fdf4}.st-chapters .n{background:#dcfce7;color:var(--g1);font-weight:800;border-radius:10px;min-width:2.1rem;height:2.1rem;display:grid;place-items:center}
+.st-chapters .t{flex:1;font-weight:700}.st-chapters .ok{color:#15803d;font-weight:800;font-size:.85rem}.st-chapters .sc{color:#a16207;font-weight:700;font-size:.85rem}
+.st-toc{display:flex;flex-wrap:wrap;gap:.5rem;list-style:none;padding:0;margin:0 0 1.2rem}.st-toc a{background:#dcfce7;color:var(--g1);border-radius:99px;padding:.3rem .9rem;font-weight:700;font-size:.85rem}
+.topic{background:#fff;border-radius:24px;padding:1.5rem;margin:1.2rem 0;box-shadow:0 6px 22px #14532d10;overflow-x:auto}
+.topic h3{margin:0 0 .6rem;color:var(--g1)}.topic h4{margin:1.2rem 0 .4rem;color:var(--g1)}.topic p,.topic li{line-height:1.7}
+.example{border:2px solid #dcfce7;border-radius:16px;padding:1rem;margin:.7rem 0}.example summary{cursor:pointer;color:var(--g1);font-weight:800;margin-top:.5rem}
+.solution{background:#f7fef9;border-radius:12px;padding:.4rem .9rem;margin-top:.5rem}
+.recap{background:#fefce8;border-radius:16px;padding:.8rem 1.1rem;margin-top:1rem}.recap ul{margin:.3rem 0 0;padding-left:1.2rem}
+.qz{margin:.9rem 0}.qz .opt{display:block;width:100%;text-align:left;background:#f8faf8;border:2px solid #d9eadf;border-radius:14px;padding:.7rem 1rem;margin:.4rem 0;font:inherit;cursor:pointer}
+.qz .opt:hover:not(:disabled){border-color:var(--g2)}.qz .opt.right{background:#dcfce7;border-color:#16a34a}.qz .opt.wrong{background:#fee2e2;border-color:#dc2626}
+.qz .why{background:#eff6ff;border-radius:12px;padding:.6rem .9rem;margin-top:.4rem}.qz.big{font-size:1.1rem;background:#fff;padding:1.4rem;border-radius:22px;box-shadow:0 6px 22px #14532d10}
+.mini-quiz{border-top:2px dashed #cdeedb;margin-top:1.2rem}
+.st-actions{display:flex;flex-wrap:wrap;gap:.7rem;margin:1.5rem 0}.st-actions .btn{border:0;font:inherit;font-weight:800;cursor:pointer}.st-actions .btn.o{border:2px solid var(--g1)}
+.progress{height:8px;background:#dcfce7;border-radius:9px;overflow:hidden;margin:.5rem 0}.progress span{display:block;height:100%;background:var(--g2);transition:.3s}
+.result{text-align:center;background:#fff;border-radius:28px;padding:2rem;box-shadow:0 6px 22px #14532d10}.big-n{font:800 4rem 'Fraunces',serif;color:var(--g2)}
+.st-msg{padding:2rem;text-align:center;color:#4b5f52}.st-msg.err{background:#fef2f2;border-radius:18px;color:#991b1b}
+.katex{font-size:1.05em}.katex-display{overflow-x:auto;overflow-y:hidden}

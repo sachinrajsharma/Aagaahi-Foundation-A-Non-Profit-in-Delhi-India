@@ -42,3 +42,8 @@ It needs a server, so it **cannot run on GitHub Pages**. Host it separately (VPS
 3. The PHP site then shows a **Blog** nav link, a "Latest from our blog" block on the homepage, `/blog` and `/blog/<slug>` pages in the site's own layout (needs the included `.htaccess` on Apache), and sends anonymous page-view beacons to the engine's analytics.
 
 Until `engine_url` is set, all of this stays hidden. For the static GitHub Pages copy, set only `engine_url`, `site_slug` and `blog_url` in `includes/config.php`, then run `node tools/build-static.js`.
+
+## Study (Class 1–12, powered by Vidaara)
+`/study/` lets students learn on this site without being redirected: pick a class → subject → chapter, read the lesson (maths rendered with KaTeX), open worked examples, check themselves with mini quizzes, and take a scored chapter test. Content is fetched live from Vidaara's public API (`https://vidaara.org/api/v1`, set in `includes/config.php` → `study.api_base`). Progress is saved in the student's own browser.
+
+The browser can only call that API if Vidaara sends CORS headers for the partner's origin; see the `feat/partner-cors` change in the Vidaara repo.

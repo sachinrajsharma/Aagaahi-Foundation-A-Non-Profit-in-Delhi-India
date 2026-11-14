@@ -8,7 +8,7 @@
 <body>
 <?php $areas = events_data(); $nProg = 0; $nPics = 0; foreach ($areas as $a) { $nProg += count($a["programs"]); foreach ($a["programs"] as $p) $nPics += count($p["images"]); } ?>
 <nav><div class="wrap"><a class="brand" href="#"><?= logo() ?> <?= e($ngo["name"]) ?></a>
-  <div><a class="m" href="#work">Our Work</a><?php if (blog_enabled()) : ?><a class="m" href="<?= e($ngo["blog"]["blog_url"]) ?>">Blog</a><?php endif; ?><a class="m" href="#contact">Contact</a> <a class="btn" style="margin-left:1.2rem;padding:.6rem 1.3rem" href="<?= e($ngo["donate_url"]) ?>">Support us</a></div></div></nav>
+  <div><a class="m" href="#work">Our Work</a><a class="m" href="study/">Study</a><?php if (blog_enabled()) : ?><a class="m" href="<?= e($ngo["blog"]["blog_url"]) ?>">Blog</a><?php endif; ?><a class="m" href="#contact">Contact</a> <a class="btn" style="margin-left:1.2rem;padding:.6rem 1.3rem" href="<?= e($ngo["donate_url"]) ?>">Support us</a></div></div></nav>
 <div class="wrap powered-row"><div class="powered">Powered by <a href="https://vidaara.org" target="_blank" rel="noopener">vidaara.org</a></div></div>
 
 <header class="hero"><div class="wrap">
@@ -29,6 +29,8 @@
   <div><b data-count="<?= $nProg ?>" data-suffix="">0</b>Programmes &amp; events</div>
   <div><b data-count="<?= $nPics ?>" data-suffix="">0</b>Moments captured</div>
 </div></div>
+
+<section><div class="wrap"><div class="study-band"><h2>Free study for Class 1 to 12</h2><p>Lessons, worked examples and practice tests in Maths, Science, English and more. Study right here, no sign-up needed.</p><a class="btn" href="study/">Start studying</a></div></div></section>
 
 <section id="work"><div class="wrap">
   <h2 class="reveal">Our work, in pictures</h2><p>Highlights from programmes and events we have run in the community.</p>

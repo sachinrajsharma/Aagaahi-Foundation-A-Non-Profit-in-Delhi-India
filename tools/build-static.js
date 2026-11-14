@@ -43,7 +43,7 @@ const html = `<!DOCTYPE html>
 </head>
 <body>
 <nav><div class="wrap"><a class="brand" href="#"><span class="logo-emoji">${esc(ngo.logo)}</span> ${esc(ngo.name)}</a>
-  <div><a class="m" href="#work">Our Work</a>${engineUrl ? `<a class="m" href="${esc(blogPath)}">Blog</a>` : ''}<a class="m" href="#contact">Contact</a> <a class="btn" style="margin-left:1.2rem;padding:.6rem 1.3rem" href="${esc(ngo.donate_url)}">Support us</a></div></div></nav>
+  <div><a class="m" href="#work">Our Work</a><a class="m" href="study/">Study</a>${engineUrl ? `<a class="m" href="${esc(blogPath)}">Blog</a>` : ''}<a class="m" href="#contact">Contact</a> <a class="btn" style="margin-left:1.2rem;padding:.6rem 1.3rem" href="${esc(ngo.donate_url)}">Support us</a></div></div></nav>
 <div class="wrap powered-row"><div class="powered">Powered by <a href="https://vidaara.org" target="_blank" rel="noopener">vidaara.org</a></div></div>
 
 <header class="hero"><div class="wrap">
@@ -64,6 +64,8 @@ const html = `<!DOCTYPE html>
   <div><b data-count="${nProg}" data-suffix="">0</b>Programmes &amp; events</div>
   <div><b data-count="${nPics}" data-suffix="">0</b>Moments captured</div>
 </div></div>
+
+<section><div class="wrap"><div class="study-band"><h2>Free study for Class 1 to 12</h2><p>Lessons, worked examples and practice tests in Maths, Science, English and more. Study right here, no sign-up needed.</p><a class="btn" href="study/">Start studying</a></div></div></section>
 
 <section id="work"><div class="wrap">
   <h2 class="reveal">Our work, in pictures</h2><p>Highlights from programmes and events we have run in the community.</p>
@@ -89,4 +91,37 @@ fs.mkdirSync(docs, { recursive: true });
 function copyDir(s, d) { fs.mkdirSync(d, { recursive: true }); for (const f of fs.readdirSync(s)) { const sp = path.join(s, f), dp = path.join(d, f); fs.statSync(sp).isDirectory() ? copyDir(sp, dp) : fs.copyFileSync(sp, dp); } }
 copyDir(root + '/assets', docs + '/assets');
 fs.writeFileSync(docs + '/index.html', html);
+
+// ---- Study page (docs/study/index.html): a small JS app over the Vidaara content API
+const studyApi = (cfg.match(/'api_base'\s*=>\s*'([^']*)'/) || [])[1] || 'https://vidaara.org/api/v1';
+const studyHtml = `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>${esc(ngo.name)} — Free Study, Class 1 to 12</title>
+<meta name="description" content="Free lessons, worked examples and practice tests for Class 1 to 12 from ${esc(ngo.name)}.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&family=Fraunces:wght@600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/common.css">
+<link rel="stylesheet" href="../assets/site.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+</head>
+<body>
+<nav><div class="wrap"><a class="brand" href="../"><span class="logo-emoji">${esc(ngo.logo)}</span> ${esc(ngo.name)}</a>
+  <div><a class="m" href="../#work">Our Work</a><a class="m" href="./">Study</a><a class="m" href="../#contact">Contact</a></div></div></nav>
+<div class="wrap powered-row"><div class="powered">Powered by <a href="https://vidaara.org" target="_blank" rel="noopener">vidaara.org</a></div></div>
+<main class="wrap study-hero"><span class="tag">🎓 Free for every student</span><h1>Study with Aagahi</h1>
+  <p class="st-sub">Lessons, worked examples and practice tests for Class 1 to 12: Maths, Science, Physics, Chemistry, Biology, English and more. No sign-up needed.</p>
+  <div id="study" data-api="${esc(studyApi)}"><p class="st-msg">Loading…</p></div></main>
+<footer>© ${new Date().getFullYear()} ${esc(ngo.name)} · Study content by <a href="https://vidaara.org" target="_blank" rel="noopener">vidaara.org</a></footer>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<script defer src="../assets/study.js"></script>
+</body>
+</html>
+`;
+fs.mkdirSync(docs + '/study', { recursive: true });
+fs.writeFileSync(docs + '/study/index.html', studyHtml);
 console.log('docs/index.html built:', areas.length, 'areas,', nProg, 'programmes,', nPics, 'photos');

@@ -32,3 +32,8 @@ $ngo['blog'] = [
     'blog_url'   => '/blog',
 ];
 if (is_file(__DIR__ . '/config.local.php')) require __DIR__ . '/config.local.php';
+
+/** Study section: free Class 1-12 lessons and tests, served by Vidaara's public content API. */
+$ngo['study'] = [
+    'api_base' => 'https://vidaara.org/api/v1',
+];
