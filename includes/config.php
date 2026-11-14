@@ -51,3 +51,7 @@ $ngo['cms'] = [
     'url'  => '',
     'site' => 'aagahi',
 ];
+
+/** Public address of this website (no trailing slash): canonical URLs, sitemap.xml and links inside blog posts use it.
+ *  Change it when you move to your own domain, then run: node tools/build-static.js */
+$ngo['site_url'] = 'https://sachinrajsharma.github.io/Aagaahi-Foundation-A-Non-Profit-in-Delhi-India';

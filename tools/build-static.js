@@ -12,6 +12,10 @@ const grab = k => (cfg.match(new RegExp("'" + k + "'\\s*=>\\s*'([^']*)'")) || []
 const engineUrl = grab('engine_url').replace(/\/+$/, ''), siteSlug = grab('site_slug'), blogPath = grab('blog_url') || '/blog';
 const ngo = Object.fromEntries(['name', 'logo', 'tagline', 'mission', 'hero_image', 'email', 'phone', 'address', 'donate_url', 'reg_note'].map(k => [k, val(k)]));
 const cmsUrl = ((cfg.match(/'url'\s*=>\s*'([^']*)'/) || [])[1] || '').replace(/\/+$/, ''), cmsSite = (cfg.match(/'site'\s*=>\s*'([^']*)'/) || [])[1] || '';
+const siteUrl = ((cfg.match(/\$ngo\['site_url'\]\s*=\s*'([^']*)'/) || [])[1] || '').replace(/\/+$/, '');
+const blogPages = require('./blog-pages');
+const posts = blogPages.load(root, siteUrl);
+const latestSection = blogPages.latestSection(posts);
 const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
 const VISIBLE = 6;
 const areas = JSON.parse(fs.readFileSync(root + '/includes/events.json', 'utf8')).areas;
@@ -73,6 +77,7 @@ const html = `<!DOCTYPE html>
 ${events}
 </div></section>
 
+${latestSection}
 <section id="contact"><div class="wrap contact">
   <div><h2>Come grow with us</h2><p>Volunteer, partner with us, or bring your skills.</p><p>${contactLines}</p></div>
   <form class="cform" method="post" action="#contact" onsubmit="alert('Demo preview only. The contact form works on the PHP version.');return false;" id="contact-form">
@@ -128,45 +133,8 @@ const studyHtml = `<!DOCTYPE html>
 </html>
 `;
 
-// ---- Blog pages (docs/blog/): posts from includes/posts.json, newest first. Empty state until the first post is added.
-const postsFile = root + '/includes/posts.json';
-const posts = (fs.existsSync(postsFile) ? (JSON.parse(fs.readFileSync(postsFile, 'utf8')).posts || []) : [])
-  .filter(p => p && p.title && /^[a-z0-9-]+$/i.test(p.slug || '')).sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')));
-function blogShell(title, pre, body, desc, extraScripts) {
-  return `<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>${esc(title)} — ${esc(ngo.name)}</title>
-<meta name="description" content="${esc(desc || ngo.mission)}">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&family=Fraunces:wght@600;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="${pre}assets/common.css">
-<link rel="stylesheet" href="${pre}assets/site.css">
-</head>
-<body>
-<nav><div class="wrap"><a class="brand" href="${pre}"><span class="logo-emoji">${esc(ngo.logo)}</span> ${esc(ngo.name)}</a>
-  <div><a class="m" href="${pre}#work">Our Work</a><a class="m" href="${pre}study/">Study</a><a class="m" href="${pre}blog/">Blog</a><a class="m" href="${pre}#contact">Contact</a> <span class="navauth"><a class="m auth" data-auth="in" href="${pre}study/#/login">Log in</a><a class="btn" data-auth="in" style="margin-left:1rem;padding:.6rem 1.3rem" href="${pre}study/#/join">Create account</a><a class="btn" data-auth="out" hidden style="margin-left:1rem;padding:.6rem 1.3rem" href="${pre}study/#/me">My progress</a></span></div></div></nav>
-<div class="wrap powered-row"><div class="powered">Powered by <a href="https://vidaara.org" target="_blank" rel="noopener">vidaara.org</a></div></div>
-<section><div class="wrap" style="max-width:820px">${body}</div></section>
-<footer>© ${new Date().getFullYear()} ${esc(ngo.name)} · ${esc(ngo.reg_note)}</footer>
-<script src="${pre}assets/nav.js"></script>
-${extraScripts || ''}
-</body>
-</html>
-`;
-}
-const listBody = posts.length
-  ? '<h1 style="color:var(--g1)">Blog</h1><div class="grid">' + posts.map(p => `<a class="card" href="${esc(p.slug)}/"><h3>${esc(p.title)}</h3><p>${esc(p.excerpt || '')}</p><small>${esc(p.date || '')}</small></a>`).join('') + '</div>'
-  : `<h1 style="color:var(--g1)">Blog</h1><p class="st-sub">Stories and updates from ${esc(ngo.name)} will appear here soon.</p>`;
-fs.mkdirSync(docs + '/blog', { recursive: true });
-fs.writeFileSync(docs + '/blog/index.html', blogShell('Blog', '../', `<div id="cms-blog" data-cms="${esc(cmsUrl)}" data-site="${esc(cmsSite)}">${listBody}</div>`, undefined, '<script src="../assets/blog.js"></script>'));
-posts.forEach(p => {
-  fs.mkdirSync(docs + '/blog/' + p.slug, { recursive: true });
-  fs.writeFileSync(docs + '/blog/' + p.slug + '/index.html', blogShell(p.title, '../../', `<article><h1 style="font-size:2.2rem;color:var(--g1)">${esc(p.title)}</h1><p class="st-sub">${esc(p.date || '')}</p>${p.content || ''}</article>`, p.excerpt));
-});
+// ---- Blog pages, sitemap and robots (see tools/blog-pages.js)
+blogPages.build({ root, docs, ngo, siteUrl, cmsUrl, cmsSite, posts });
 
 fs.mkdirSync(docs + '/study', { recursive: true });
 fs.writeFileSync(docs + '/study/index.html', studyHtml);

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://sachinrajsharma.github.io/Aagaahi-Foundation-A-Non-Profit-in-Delhi-India/sitemap.xml

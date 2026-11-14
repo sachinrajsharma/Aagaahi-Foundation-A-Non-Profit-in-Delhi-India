@@ -21,7 +21,7 @@ if (blog_enabled()) {
     $local = local_posts();
     if ($slug === '') $posts = $local;
     else {
-        foreach ($local as $lp) if ($lp['slug'] === $slug) $post = ['title' => $lp['title'], 'content' => $lp['content'] ?? '', 'meta' => ['title' => $lp['title'], 'description' => $lp['excerpt'] ?? '', 'canonical' => ''], 'json_ld' => ''];
+        foreach ($local as $lp) if ($lp['slug'] === $slug) $post = ['title' => $lp['title'], 'content' => $lp['content'] ?? '', 'cover_rel' => $lp['cover_rel'] ?? '', 'cover_alt' => $lp['cover_alt'] ?? '', 'category' => $lp['category'] ?? '', 'date' => $lp['date'] ?? '', 'author' => $lp['author'] ?? '', 'meta' => ['title' => $lp['meta_title'] ?? $lp['title'], 'description' => $lp['meta_desc'] ?? ($lp['excerpt'] ?? ''), 'canonical' => ($ngo['site_url'] ?? '') . '/blog/' . $lp['slug'] . '/'], 'json_ld' => ''];
         if (!$post) http_response_code(404);
     }
 }
@@ -44,10 +44,15 @@ $title = $post['meta']['title'] ?? $post['title'] ?? 'Blog';
 <div class="wrap powered-row"><div class="powered">Powered by <a href="https://vidaara.org" target="_blank" rel="noopener">vidaara.org</a></div></div>
 <section><div class="wrap" style="max-width:820px" id="cms-blog" data-cms="<?= e($ngo['cms']['url'] ?? '') ?>" data-site="<?= e($ngo['cms']['site'] ?? '') ?>">
 <?php if ($post): ?>
-  <article><h1 style="font-size:2.4rem;color:var(--g1)"><?= e($post['title']) ?></h1><?= $post['content'] ?></article>
+  <article class="article">
+    <?php if (!empty($post['category'])): ?><p class="post-cat"><?= e($post['category']) ?></p><?php endif; ?>
+    <h1><?= e($post['title']) ?></h1>
+    <?php if (!empty($post['date'])): ?><p class="post-meta">By <?= e($post['author'] ?: $ngo['name']) ?> · <?= e(date('j F Y', strtotime($post['date']))) ?></p><?php endif; ?>
+    <?php if (!empty($post['cover_rel'])): ?><figure class="post-cover"><img src="<?= e($post['cover_rel']) ?>" alt="<?= e($post['cover_alt'] ?? '') ?>"></figure><?php endif; ?>
+    <?= $post['content'] ?></article>
 <?php elseif ($slug === '' && $posts): ?>
   <h1 style="color:var(--g1)">Blog</h1>
-  <div class="grid"><?php foreach ($posts as $p): ?><a class="card" href="/blog/<?= e($p['slug']) ?>"><h3><?= e($p['title']) ?></h3><p><?= e($p['excerpt'] ?? '') ?></p></a><?php endforeach; ?></div>
+  <div class="post-grid"><?php foreach ($posts as $p) echo blog_card($p, '/blog/' . $p['slug']); ?></div>
 <?php else: ?>
   <h1 style="color:var(--g1)">Blog</h1><p>Stories and updates from <?= e($ngo['name']) ?> will appear here soon.</p>
 <?php endif; ?>

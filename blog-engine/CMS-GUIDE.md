@@ -33,7 +33,9 @@ This is a Node.js + MySQL app, so it runs as its own app (for example on a subdo
 4. Sign in at `https://cms.yourdomain.org/admin` → **Sites** → create a site named *Aagahi Foundation* with slug **`aagahi`**.
 5. Move the existing photos in (one time, from the website repo folder):
    `node scripts/import-gallery.js aagahi /path/to/Aagaahi-Foundation-A-Non-Profit-in-Delhi-India`
-6. Add your team under **Staff** and give them the *Aagahi* site.
+6. Import the four blog posts so staff can edit them in the dashboard:
+   `node scripts/import-posts.js aagahi /path/to/Aagaahi-Foundation-A-Non-Profit-in-Delhi-India`
+7. Add your team under **Staff** and give them the *Aagahi* site.
 
 ## Connect the website
 In the website repo, `includes/config.php`:

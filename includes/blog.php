@@ -43,14 +43,24 @@ function blog_tracker(string $pageType = '', string $slug = ''): string
         . ($pageType ? ' data-page-type="' . e($pageType) . '"' : '') . ($slug !== '' ? ' data-slug="' . e($slug) . '"' : '') . ' defer></script>';
 }
 
+/** One blog card (engine posts have cover_image, local posts have cover_rel). */
+function blog_card(array $p, string $href): string
+{
+    $img = $p['cover_image'] ?? ($p['cover_rel'] ?? '');
+    $cat = $p['category'] ?? '';
+    $date = !empty($p['date']) ? date('j F Y', strtotime($p['date'])) : (!empty($p['published_at']) ? date('j F Y', strtotime($p['published_at'])) : '');
+    return '<a class="post-card" href="' . e($href) . '">' . ($img ? '<img src="' . e($img) . '" alt="' . e($p['cover_alt'] ?? '') . '" loading="lazy">' : '')
+        . '<div class="pc-body">' . ($cat ? '<span class="post-cat">' . e($cat) . '</span>' : '') . '<h3>' . e($p['title']) . '</h3><p>' . e($p['excerpt'] ?? '') . '</p>'
+        . ($date ? '<small>' . e($date) . '</small>' : '') . '</div></a>';
+}
+
 function blog_latest_html(): string
 {
-    $posts = blog_latest(3);
+    $posts = blog_latest(4);
+    if (!$posts) $posts = array_slice(local_posts(), 0, 4);   // engine not connected: use the posts kept in this repo
     if (!$posts) return '';
-    $o = '<section id="blog"><div class="wrap"><h2 class="reveal">Latest from our blog</h2><div class="grid">';
-    foreach ($posts as $p) {
-        $o .= '<a class="card reveal" href="/blog/' . e($p['slug']) . '"><h3>' . e($p['title']) . '</h3><p>' . e($p['excerpt'] ?? '') . '</p></a>';
-    }
+    $o = '<section id="blog"><div class="wrap"><h2 class="reveal">From our blog</h2><p>Practical guides from our programmes: money and online safety, hygiene, road safety and workplace rights.</p><div class="post-grid">';
+    foreach ($posts as $p) $o .= blog_card($p, '/blog/' . $p['slug']);
     return $o . '</div><p style="margin-top:1.5rem"><a class="btn o" href="/blog">All posts</a></p></div></section>';
 }
 

@@ -61,3 +61,6 @@ Every page has **Our Work · Study · Blog · Contact · Log in · Create accoun
 
 ### Admin dashboard (staff, blog, gallery, images)
 `blog-engine/` is a WordPress-style dashboard: staff accounts with roles and per-site access, a blog editor, a gallery manager (events and photos, auto-resized) and an image library. It needs a Node + MySQL host (it cannot run on GitHub Pages); see `blog-engine/CMS-GUIDE.md` for setup. When `cms.url` in `includes/config.php` is set, the Blog and the "Our work" gallery show what the team publishes there.
+
+### Writing blog posts
+Posts live in `includes/posts/<slug>.html`: a small settings block at the top (title, slug, date, category, focus keyphrase, meta title and description, cover image, FAQs) followed by the article HTML. Run `node tools/build-static.js` to rebuild the Blog, post pages (with SEO markup: canonical, Open Graph, structured data), `sitemap.xml` and `robots.txt`. Use `{{SITE}}` in links and images; it becomes the address in `site_url` (`includes/config.php`). Once the dashboard is running, import the posts with `node blog-engine/scripts/import-posts.js aagahi <this folder>` and edit them there.
